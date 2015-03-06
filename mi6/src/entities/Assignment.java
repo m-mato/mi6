@@ -10,6 +10,7 @@ import java.util.Calendar;
 /**
  *
  * @author Andrej Halaj
+ * @author Matej Majdis
  */
 public class Assignment {
     private long id;

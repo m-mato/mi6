@@ -8,6 +8,7 @@ package entities;
 /**
  *
  * @author Andrej Halaj
+ * @author Matej Majdis
  */
 public class Agent {
     private long id;

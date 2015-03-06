@@ -11,6 +11,7 @@ import java.util.List;
 /**
  *
  * @author Andrej Halaj
+ * @author Matej Majdis
  */
 public class AgentManagerImpl implements AgentManager{
 

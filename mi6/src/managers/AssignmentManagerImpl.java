@@ -13,6 +13,7 @@ import java.util.List;
 /**
  *
  * @author Andrej Halaj
+ * @author Matej Majdis
  */
 public class AssignmentManagerImpl implements AssignmentManager{
 

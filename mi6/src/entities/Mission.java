@@ -8,6 +8,7 @@ package entities;
 /**
  *
  * @author Andrej Halaj
+ * @author Matej Majdis
  */
 public class Mission {
     private long id;
