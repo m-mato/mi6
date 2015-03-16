@@ -19,7 +19,7 @@ public interface AssignmentManager {
     void createAssignment(Assignment assignment);
     void updateAssignment(Assignment assignment);
     void deleteAssignment(Assignment assignment);
-    Assignment getAssignmentById(long id);
+    Assignment getAssignmentById(Long id);
     List<Assignment> findAllAssignments();
     List<Assignment> findAssignmentsForAgent(Agent agent);
     List<Assignment> findAssignmentsForMission(Mission mission);

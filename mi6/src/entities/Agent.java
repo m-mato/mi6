@@ -5,13 +5,15 @@
  */
 package entities;
 
+import java.util.Objects;
+
 /**
  *
  * @author Andrej Halaj
  * @author Matej Majdis
  */
 public class Agent {
-    private long id;
+    private Long id;
     private int age;
     private String nickName;
     private String phoneNumber;
@@ -20,11 +22,11 @@ public class Agent {
         
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -50,6 +52,40 @@ public class Agent {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 89 * hash + this.age;
+        hash = 89 * hash + Objects.hashCode(this.nickName);
+        hash = 89 * hash + Objects.hashCode(this.phoneNumber);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Agent other = (Agent) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (this.age != other.age) {
+            return false;
+        }
+        if (!Objects.equals(this.nickName, other.nickName)) {
+            return false;
+        }
+        if (!Objects.equals(this.phoneNumber, other.phoneNumber)) {
+            return false;
+        }
+        return true;
     }
     
     

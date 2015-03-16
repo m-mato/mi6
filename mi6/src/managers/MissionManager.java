@@ -17,6 +17,6 @@ public interface MissionManager {
     void createMission(Mission mission);
     void updateMission(Mission mission);
     void deleteMission(Mission mission);
-    Mission getMissionById(long id); 
+    Mission getMissionById(Long id); 
     List<Mission> findAllMissions();
 }

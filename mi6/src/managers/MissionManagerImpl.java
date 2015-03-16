@@ -31,7 +31,7 @@ public class MissionManagerImpl implements MissionManager{
     }
 
     @Override
-    public Mission getMissionById(long id) {
+    public Mission getMissionById(Long id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

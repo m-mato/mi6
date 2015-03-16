@@ -5,13 +5,15 @@
  */
 package entities;
 
+import java.util.Objects;
+
 /**
  *
  * @author Andrej Halaj
  * @author Matej Majdis
  */
 public class Mission {
-    private long id;
+    private Long id;
     private String codeName;
     private String objective;
     private String location;
@@ -21,11 +23,11 @@ public class Mission {
         
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -61,4 +63,43 @@ public class Mission {
         this.notes = notes;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 53 * hash + Objects.hashCode(this.codeName);
+        hash = 53 * hash + Objects.hashCode(this.objective);
+        hash = 53 * hash + Objects.hashCode(this.location);
+        hash = 53 * hash + Objects.hashCode(this.notes);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Mission other = (Mission) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (!Objects.equals(this.codeName, other.codeName)) {
+            return false;
+        }
+        if (!Objects.equals(this.objective, other.objective)) {
+            return false;
+        }
+        if (!Objects.equals(this.location, other.location)) {
+            return false;
+        }
+        if (!Objects.equals(this.notes, other.notes)) {
+            return false;
+        }
+        return true;
+    }
+
+    
 }

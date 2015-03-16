@@ -17,6 +17,6 @@ public interface AgentManager {
     void createAgent(Agent agent);
     void updateAgent(Agent agent);
     void deleteAgent(Agent agent);
-    Agent getAgentById(long id);
+    Agent getAgentById(Long id);
     List<Agent> findAllAgents();
 }

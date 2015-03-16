@@ -31,7 +31,7 @@ public class AgentManagerImpl implements AgentManager{
     }
 
     @Override
-    public Agent getAgentById(long id) {
+    public Agent getAgentById(Long id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

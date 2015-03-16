@@ -5,7 +5,8 @@
  */
 package entities;
 
-import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
 
 /**
  *
@@ -13,21 +14,21 @@ import java.util.Calendar;
  * @author Matej Majdis
  */
 public class Assignment {
-    private long id;
+    private Long id;
     private Agent agent;
     private Mission mission;
-    private Calendar startDate;
-    private Calendar endDate;
+    private Date startDate;
+    private Date endDate;
     
     public Assignment() {
     
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -47,20 +48,59 @@ public class Assignment {
         this.mission = mission;
     }
 
-    public Calendar getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Calendar startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public Calendar getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Calendar endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 29 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 29 * hash + Objects.hashCode(this.agent);
+        hash = 29 * hash + Objects.hashCode(this.mission);
+        hash = 29 * hash + Objects.hashCode(this.startDate);
+        hash = 29 * hash + Objects.hashCode(this.endDate);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Assignment other = (Assignment) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (!Objects.equals(this.agent, other.agent)) {
+            return false;
+        }
+        if (!Objects.equals(this.mission, other.mission)) {
+            return false;
+        }
+        if (!Objects.equals(this.startDate, other.startDate)) {
+            return false;
+        }
+        if (!Objects.equals(this.endDate, other.endDate)) {
+            return false;
+        }
+        return true;
+    }
      
+    
 }

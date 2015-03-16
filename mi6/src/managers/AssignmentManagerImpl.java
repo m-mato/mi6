@@ -33,7 +33,7 @@ public class AssignmentManagerImpl implements AssignmentManager{
     }
 
     @Override
-    public Assignment getAssignmentById(long id) {
+    public Assignment getAssignmentById(Long id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
