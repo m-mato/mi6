@@ -31,7 +31,7 @@ public class MissionManagerImplTest {
     @Test
     public void createMission() {
         Mission missionWithNote= newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
-        Mission missionWithNullNote= newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", null);
+        Mission missionWithNullNote= newMission("Operation Monkey", "Save the Monkey", "Slovak republic", null);
         
         manager.createMission(missionWithNote);
         manager.createMission(missionWithNullNote);
@@ -124,15 +124,6 @@ public class MissionManagerImplTest {
     }
     
     @Test(expected = IllegalArgumentException.class)
-    public void updateDuplicatedMission() {
-        Mission mission= newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
-        manager.createMission(mission);
-        
-        mission.setId(mission.getId() - 1);
-        manager.updateMission(mission);
-    }
-    
-    @Test(expected = IllegalArgumentException.class)
     public void updateMissionWithNullCodeName() {
         Mission mission= newMission(null, "Kill the Anaconda", "Czech republicm, Brno", "It is 20 meters Long");
         manager.createMission(mission);
@@ -184,13 +175,6 @@ public class MissionManagerImplTest {
         mission.setId(null);
         manager.deleteMission(mission);
     }
-    
-    /*@Test(expected = IllegalArgumentException.class)
-    public void deleteMissionWithId() {
-        Mission mission= newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");       
-        mission.setId(1l);
-        manager.deleteMission(mission);
-    }*/
 
     @Test
     public void getMissionById() {

@@ -14,6 +14,7 @@ import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import java.time.Instant;
 
 /**
  *
@@ -30,6 +31,10 @@ public class AssignmentManagerImplITest {
        
     @Test
     public void createAssignment() {
+         Agent agent= new Agent();
+         Mission mission= new Mission();
+         Date date= Date.from(Instant.now());
+         
          //Assignment assignment= newAssignment(null, null, null, null);
     }
 
