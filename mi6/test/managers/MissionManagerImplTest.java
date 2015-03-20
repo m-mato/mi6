@@ -20,133 +20,135 @@ import static org.junit.Assert.*;
  * @author Matej Majdis
  */
 public class MissionManagerImplTest {
-    
+
     private MissionManagerImpl manager;
-    
+
     @Before
     public void setUp() throws SQLException {
-        manager= new MissionManagerImpl();
+        manager = new MissionManagerImpl();
     }
 
     @Test
     public void createMission() {
-        Mission missionWithNote= newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
-        Mission missionWithNullNote= newMission("Operation Monkey", "Save the Monkey", "Slovak republic", null);
-        
+        Mission missionWithNote = newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
+        Mission missionWithNullNote = newMission("Operation Monkey", "Save the Monkey", "Slovak republic", null);
+
         manager.createMission(missionWithNote);
         manager.createMission(missionWithNullNote);
-        
+
         checkCreatedMission(missionWithNote);
         checkCreatedMission(missionWithNullNote);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void createMissionWithNullCodeName() {
-        Mission mission= newMission(null, "Kill the Anaconda", "Czech republicm, Brno", "It is 20 meters Long");
+        Mission mission = newMission(null, "Kill the Anaconda", "Czech republicm, Brno", "It is 20 meters Long");
         manager.createMission(mission);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void createMissionWithNullObjective() {
-        Mission mission= newMission("Operation Anaconda", null, "Czech republic, Brno", "It is 20 meters Long");
+        Mission mission = newMission("Operation Anaconda", null, "Czech republic, Brno", "It is 20 meters Long");
         manager.createMission(mission);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void createMissionWithNullLocation() {
-        Mission mission= newMission("Operation Anaconda", "Kill the Anaconda", null, "It is 20 meters Long");
+        Mission mission = newMission("Operation Anaconda", "Kill the Anaconda", null, "It is 20 meters Long");
         manager.createMission(mission);
     }
-    
+
     @Test
     public void updateMission() {
-        Mission mission= newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
-        Mission m2= newMission("Operation Monkey", "Save the Monkey", "Slovak republic", null);
+        Mission mission = newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
+        Mission m2 = newMission("Operation Monkey", "Save the Monkey", "Slovak republic", null);
         manager.createMission(mission);
         manager.createMission(m2);
-        Long missionId= mission.getId();
-        
-        mission= manager.getMissionById(missionId);
+        Long missionId = mission.getId();
+
+        mission = manager.getMissionById(missionId);
         mission.setCodeName("Another CodeName");
         manager.updateMission(mission);
         assertEquals("Another CodeName", mission.getCodeName());
         assertEquals("Kill the Anaconda", mission.getObjective());
         assertEquals("Czech republic, Brno", mission.getLocation());
         assertEquals("It is 20 meters Long", mission.getNotes());
-        
-        mission= manager.getMissionById(missionId);
+
+        mission = manager.getMissionById(missionId);
         mission.setObjective("Another Objective");
         manager.updateMission(mission);
         assertEquals("Another CodeName", mission.getCodeName());
         assertEquals("Another Objective", mission.getObjective());
         assertEquals("Czech republic, Brno", mission.getLocation());
         assertEquals("It is 20 meters Long", mission.getNotes());
-        
-        mission= manager.getMissionById(missionId);
+
+        mission = manager.getMissionById(missionId);
         mission.setLocation("Another Location");
         manager.updateMission(mission);
         assertEquals("Another CodeName", mission.getCodeName());
         assertEquals("Another Objective", mission.getObjective());
         assertEquals("Another Location", mission.getLocation());
         assertEquals("It is 20 meters Long", mission.getNotes());
-        
-        mission= manager.getMissionById(missionId);
+
+        mission = manager.getMissionById(missionId);
         mission.setNotes("Another Notes");
         manager.updateMission(mission);
         assertEquals("Another CodeName", mission.getCodeName());
         assertEquals("Another Objective", mission.getObjective());
         assertEquals("Another Location", mission.getLocation());
         assertEquals("Another Notes", mission.getNotes());
-        
-        mission= manager.getMissionById(missionId);
+
+        mission = manager.getMissionById(missionId);
         mission.setNotes(null);
         manager.updateMission(mission);
         assertEquals("Another CodeName", mission.getCodeName());
         assertEquals("Kill the Anaconda", mission.getObjective());
         assertEquals("Czech republic, Brno", mission.getLocation());
         assertNull(mission.getNotes());
-        
-        assertDeepEquals(m2, manager.getMissionById(m2.getId()));      
+
+        assertDeepEquals(m2, manager.getMissionById(m2.getId()));
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void updateNullMission() {
         manager.updateMission(null);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void updateMissionWithNullId() {
-        Mission mission= newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
+        Mission mission = newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
         manager.createMission(mission);
-        
+
         mission.setId(null);
         manager.updateMission(mission);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void updateMissionWithNullCodeName() {
-        Mission mission= newMission(null, "Kill the Anaconda", "Czech republicm, Brno", "It is 20 meters Long");
+        Mission mission = newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
         manager.createMission(mission);
-        
+
+        mission.setCodeName(null);
         manager.updateMission(mission);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void updateMissionWithNullObjective() {
-        Mission mission= newMission("Operation Anaconda", null, "Czech republic, Brno", "It is 20 meters Long");
+        Mission mission = newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
         manager.createMission(mission);
-        
+
+        mission.setObjective(null);
         manager.updateMission(mission);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void updateMissionWithNullLocation() {
-        Mission mission= newMission("Operation Anaconda", "Kill the Anaconda", null, "It is 20 meters Long");
+        Mission mission = newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
         manager.createMission(mission);
-        
+
+        mission.setLocation(null);
         manager.updateMission(mission);
     }
-    
 
     @Test
     public void deleteMission() {
@@ -154,24 +156,24 @@ public class MissionManagerImplTest {
         Mission m2 = newMission("Operation Monkey", "Save the Monkey", "Slovak republic", null);
         manager.createMission(m1);
         manager.createMission(m2);
-        
+
         assertNotNull(manager.getMissionById(m1.getId()));
         assertNotNull(manager.getMissionById(m2.getId()));
 
         manager.deleteMission(m1);
-        
+
         assertNull(manager.getMissionById(m1.getId()));
         assertNotNull(manager.getMissionById(m2.getId()));
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void deleteNullMission() {
         manager.deleteMission(null);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void deleteMissionWithNullId() {
-        Mission mission= newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");   
+        Mission mission = newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
         mission.setId(null);
         manager.deleteMission(mission);
     }
@@ -179,7 +181,7 @@ public class MissionManagerImplTest {
     @Test
     public void getMissionById() {
         assertNull(manager.getMissionById(1l));
-        
+
         Mission mission = newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
         manager.createMission(mission);
         Long missionId = mission.getId();
@@ -188,12 +190,12 @@ public class MissionManagerImplTest {
         assertEquals(mission, result);
         assertDeepEquals(mission, result);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void getMissionByNullId() {
         manager.getMissionById(null);
     }
-    
+
     @Test
     public void findAllMissions() {
         assertTrue(manager.findAllMissions().isEmpty());
@@ -204,34 +206,34 @@ public class MissionManagerImplTest {
         manager.createMission(g1);
         manager.createMission(g2);
 
-        List<Mission> expected = Arrays.asList(g1,g2);
+        List<Mission> expected = Arrays.asList(g1, g2);
         List<Mission> actual = manager.findAllMissions();
 
-        Collections.sort(actual,idComparator);
-        Collections.sort(expected,idComparator);
+        Collections.sort(actual, idComparator);
+        Collections.sort(expected, idComparator);
 
         assertEquals(expected, actual);
         assertDeepEquals(expected, actual);
     }
-    
+
     private static Mission newMission(String codeName, String objective, String location, String notes) {
         Mission mission = new Mission();
         mission.setCodeName(codeName);
         mission.setObjective(objective);
         mission.setLocation(location);
         mission.setNotes(notes);
-        
+
         return mission;
     }
-    
+
     private void checkCreatedMission(Mission mission) {
-        Long missionId= mission.getId();
+        Long missionId = mission.getId();
         assertNotNull(missionId);
-        
-        Mission result= manager.getMissionById(missionId);
+
+        Mission result = manager.getMissionById(missionId);
         assertEquals(mission, result);
         assertNotSame(mission, result);
-        assertDeepEquals(mission, result); 
+        assertDeepEquals(mission, result);
     }
 
     private void assertDeepEquals(List<Mission> expectedList, List<Mission> actualList) {
@@ -257,5 +259,5 @@ public class MissionManagerImplTest {
             return Long.valueOf(o1.getId()).compareTo(Long.valueOf(o2.getId()));
         }
     };
-    
+
 }
