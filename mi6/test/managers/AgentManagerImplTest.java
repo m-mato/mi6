@@ -39,8 +39,14 @@ public class AgentManagerImplTest {
     }
     
     @Test(expected = IllegalArgumentException.class)
-    public void testCreateAgentWithWrongNickName() {
+    public void testCreateAgentWithNullNickName() {
         Agent agent = newAgent(32, null, "555245845");
+        agentManager.createAgent(agent);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateAgentWithEmptyNickName() {
+        Agent agent = newAgent(32,"", "555213125");
         agentManager.createAgent(agent);
     }
     
@@ -64,6 +70,39 @@ public class AgentManagerImplTest {
         agentManager.createAgent(agent);
         result = agentManager.getAgentById(agent.getId());
         assertNotNull(result);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateAgentWithWrongAge() {
+        Agent agent = newAgent(24, "Shadow", "555324846");
+        agentManager.createAgent(agent);
+        Long agentId = agent.getId();
+        
+        agent = agentManager.getAgentById(agentId);
+        agent.setAge(0);
+        agentManager.updateAgent(agent);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateAgentWithNullNickName() {
+        Agent agent = newAgent(24, "Shadow", "555324846");
+        agentManager.createAgent(agent);
+        Long agentId = agent.getId();
+        
+        agent = agentManager.getAgentById(agentId);
+        agent.setNickName(null);
+        agentManager.updateAgent(agent);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateAgentWithEmptyNickName() {
+        Agent agent = newAgent(24, "Shadow", "555324846");
+        agentManager.createAgent(agent);
+        Long agentId = agent.getId();
+        
+        agent = agentManager.getAgentById(agentId);
+        agent.setNickName("");
+        agentManager.updateAgent(agent);
     }
     
     @Test
@@ -99,6 +138,49 @@ public class AgentManagerImplTest {
         assertEquals(42, agent.getAge());
         assertEquals("Blue", agent.getNickName());
         assertNull(agent.getPhoneNumber());
+    }
+    
+    @Test
+    public void testDeleteAgent() {
+        Agent agent = newAgent(24, "Shadow", "555324846");
+        Agent agent2 = newAgent(31, "Devil", "555241325");
+        agentManager.createAgent(agent);
+        agentManager.createAgent(agent2);
+        
+        List<Agent> expected = Arrays.asList(agent, agent2);
+        List<Agent> actual = agentManager.findAllAgents();
+        assertEquals(actual, expected);
+        assertDeepEquals(actual, expected);
+        
+        Long agentId = agent.getId();
+        Long agent2Id = agent2.getId();
+        
+        agent = agentManager.getAgentById(agentId);
+        agent2 = agentManager.getAgentById(agent2Id);
+        
+        agentManager.deleteAgent(agent);
+        
+        expected = Arrays.asList(agent2);
+        actual = agentManager.findAllAgents();
+        assertEquals(actual, expected);
+        assertDeepEquals(actual, expected);
+    }
+    
+    @Test
+    public void testGetAgentById() {
+        Agent agent1 = newAgent(24, "Shadow", "555324846");
+        Agent agent2 = newAgent(32, "Devil", "555245845");
+        
+        agentManager.createAgent(agent1);
+        agentManager.createAgent(agent2);
+        
+        Agent agentFromDatabase1 = agentManager.getAgentById(agent1.getId());
+        Agent agentFromDatabase2 = agentManager.getAgentById(agent2.getId());
+        
+        assertEquals(agentFromDatabase1, agent1);
+        assertEquals(agentFromDatabase2, agent2);
+        assertDeepEquals(agentFromDatabase1, agent1);
+        assertDeepEquals(agentFromDatabase2, agent2);
     }
     
     @Test
