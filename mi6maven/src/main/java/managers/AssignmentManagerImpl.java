@@ -10,7 +10,6 @@ import entities.Assignment;
 import entities.Mission;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,12 +50,14 @@ public class AssignmentManagerImpl implements AssignmentManager {
 
     @Override
     public void createAssignment(Assignment assignment) {
+        validateAssignment(assignment);
         jdbc.update("INSERT INTO ASSIGNMENTS (MISSION_ID, AGENT_ID, START_DATE, END_DATE) VALUES (?,?,?,?)",
                 assignment.getAgent().getId(), assignment.getMission().getId(), assignment.getStartDate(), assignment.getEndDate());
     }
 
     @Override
     public void updateAssignment(Assignment assignment) {
+        validateAssignment(assignment);
         jdbc.update("UPDATE ASSIGNMENTS SET AGENT_ID=? MISSION_ID=?, START_DATE=?, END_DATE=?  WHERE ID=?",
                 assignment.getAgent().getId(), assignment.getMission().getId(), assignment.getStartDate(), assignment.getEndDate(), assignment.getId());
     }

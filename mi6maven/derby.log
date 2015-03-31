@@ -1,0 +1,10 @@
+----------------------------------------------------------------
+Tue Mar 31 19:06:48 CEST 2015:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-014c-70cc-bc01-00000689dcc8 
+on database directory memory:C:\Users\Andrej Halaj\Documents\NetBeansProjects\mi6\mi6maven\mi6secretDB  with class loader sun.misc.Launcher$AppClassLoader@42a57993 
+Loaded from file:/C:/Users/Andrej%20Halaj/.m2/repository/org/apache/derby/derby/10.8.1.2/derby-10.8.1.2.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_40-b26
+user.dir=C:\Users\Andrej Halaj\Documents\NetBeansProjects\mi6\mi6maven
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

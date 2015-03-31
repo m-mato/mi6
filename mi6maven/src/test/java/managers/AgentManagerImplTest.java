@@ -5,14 +5,18 @@
  */
 package managers;
 
+import common.DBUtils;
 import entities.Agent;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,27 +34,9 @@ public class AgentManagerImplTest {
     
     private static DataSource prepareDataSource() {
         BasicDataSource ds = new BasicDataSource();
-        ds.setUrl("jdbc:derby:memory:myDB;create=true");
+        ds.setUrl("jdbc:derby:memory:mi6secretDB;create=true");
         
         return ds;
-    }
-    
-    private static String[] readSqlStatements(URL url) {
-        try {
-            char buffer[] = new char[256];
-            StringBuilder result = new StringBuilder();
-            InputStreamReader reader = new InputStreamReader(url.openStream(), "UTF-8");
-            while (true) {
-                int count = reader.read(buffer);
-                if (count < 0) {
-                    break;
-                }
-                result.append(buffer, 0, count);
-            }
-            return result.toString().split(";");
-        } catch (IOException ex) {
-            throw new RuntimeException("Cannot read " + url, ex);
-        }
     }
 
     @Before
@@ -58,6 +44,12 @@ public class AgentManagerImplTest {
         ds = prepareDataSource();
         agentManager = new AgentManagerImpl();
         agentManager.setDataSource(ds);
+        
+        try {
+            DBUtils.executeSqlScript(ds, AgentManager.class.getResourceAsStream("createTables.sql"));
+        } catch (SQLException ex) {
+            Logger.getLogger(AgentManagerImplTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Test(expected = IllegalArgumentException.class)
