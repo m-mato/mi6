@@ -22,6 +22,8 @@ import java.util.Comparator;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.After;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -30,7 +32,7 @@ import org.junit.After;
 public class AssignmentManagerImplITest {
 
     private AssignmentManagerImpl manager;
-    private DataSource ds;
+    private DataSource dataSource;
 
     public static final Date NOW = Date.from(Instant.now());
     public static final Date EPOCH = Date.from(Instant.EPOCH);
@@ -44,16 +46,17 @@ public class AssignmentManagerImplITest {
 
     @Before
     public void setUp() throws SQLException {
-        ds = prepareDataSource();
+        dataSource = prepareDataSource();
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
         manager = new AssignmentManagerImpl();
-        manager.setDataSource(ds);
+        manager.setDataSource(dataSource);
 
-        DBUtils.executeSqlScript(ds,getClass().getResource("/createTables.sql"));
+        DBUtils.executeSqlScript(dataSource,getClass().getResource("/createTables.sql"));
     }
 
     @After
     public void tearDown() throws SQLException {
-        DBUtils.executeSqlScript(ds, getClass().getResource("/dropTables.sql"));
+        DBUtils.executeSqlScript(dataSource, getClass().getResource("/dropTables.sql"));
     }
 
     @Test
@@ -396,7 +399,7 @@ public class AssignmentManagerImplITest {
 
         @Override
         public int compare(Assignment o1, Assignment o2) {
-            return Long.valueOf(o1.getId()).compareTo(Long.valueOf(o2.getId()));
+            return o1.getId().compareTo(o2.getId());
         }
     };
 
