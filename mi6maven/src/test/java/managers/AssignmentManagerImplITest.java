@@ -5,6 +5,7 @@
  */
 package managers;
 
+import common.DBUtils;
 import entities.Agent;
 import entities.Assignment;
 import entities.Mission;
@@ -18,6 +19,9 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import javax.sql.DataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.junit.After;
 
 /**
  *
@@ -26,13 +30,30 @@ import java.util.Comparator;
 public class AssignmentManagerImplITest {
 
     private AssignmentManagerImpl manager;
+    private DataSource ds;
 
     public static final Date NOW = Date.from(Instant.now());
     public static final Date EPOCH = Date.from(Instant.EPOCH);
 
+    private static DataSource prepareDataSource() {
+        BasicDataSource ds = new BasicDataSource();
+        ds.setUrl("jdbc:derby:memory:mi6testDB;create=true");
+
+        return ds;
+    }
+
     @Before
     public void setUp() throws SQLException {
-        this.manager = new AssignmentManagerImpl();
+        ds = prepareDataSource();
+        manager = new AssignmentManagerImpl();
+        manager.setDataSource(ds);
+
+        DBUtils.executeSqlScript(ds,getClass().getResource("/createTables.sql"));
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+        DBUtils.executeSqlScript(ds, getClass().getResource("/dropTables.sql"));
     }
 
     @Test

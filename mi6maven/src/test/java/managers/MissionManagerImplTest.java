@@ -5,12 +5,16 @@
  */
 package managers;
 
+import common.DBUtils;
 import entities.Mission;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import javax.sql.DataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -22,10 +26,27 @@ import static org.junit.Assert.*;
 public class MissionManagerImplTest {
 
     private MissionManagerImpl manager;
+    private DataSource ds;
+
+    private static DataSource prepareDataSource() {
+        BasicDataSource ds = new BasicDataSource();
+        ds.setUrl("jdbc:derby:memory:mi6testDB;create=true");
+
+        return ds;
+    }
 
     @Before
     public void setUp() throws SQLException {
+        ds = prepareDataSource();
         manager = new MissionManagerImpl();
+        manager.setDataSource(ds);
+
+        DBUtils.executeSqlScript(ds,getClass().getResource("/createTables.sql"));
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+        DBUtils.executeSqlScript(ds, getClass().getResource("/dropTables.sql"));
     }
 
     @Test
@@ -107,8 +128,8 @@ public class MissionManagerImplTest {
         mission.setNotes(null);
         manager.updateMission(mission);
         assertEquals("Another CodeName", mission.getCodeName());
-        assertEquals("Kill the Anaconda", mission.getObjective());
-        assertEquals("Czech republic, Brno", mission.getLocation());
+        assertEquals("Another Objective", mission.getObjective());
+        assertEquals("Another Location", mission.getLocation());
         assertNull(mission.getNotes());
 
         assertDeepEquals(m2, manager.getMissionById(m2.getId()));
@@ -117,15 +138,6 @@ public class MissionManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void updateNullMission() {
         manager.updateMission(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void updateMissionWithNullId() {
-        Mission mission = newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
-        manager.createMission(mission);
-
-        mission.setId(null);
-        manager.updateMission(mission);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -174,13 +186,6 @@ public class MissionManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void deleteNullMission() {
         manager.deleteMission(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void deleteMissionWithNullId() {
-        Mission mission = newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
-        mission.setId(null);
-        manager.deleteMission(mission);
     }
 
     @Test

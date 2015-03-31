@@ -5,6 +5,9 @@
  */
 package managers;
 
+import common.DBUtils;
+import common.IllegalEntityException;
+import common.ServiceFailureException;
 import entities.Agent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -42,43 +45,32 @@ public class AgentManagerImpl implements AgentManager {
     public void createAgent(Agent agent) {
         checkDataSource();
         validateAgent(agent);
-        Connection connection = null;
-        PreparedStatement statement;
-
+        if (agent.getId() != null) {
+            throw new IllegalEntityException("agent id is already set");
+        }       
+        Connection conn = null;
+        PreparedStatement st = null;
         try {
-            connection = dataSource.getConnection();
-            connection.setAutoCommit(false);
-            statement = connection.prepareStatement("INSERT INTO AGENT (AGE, NICKNAME, PHONENUMBER) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            st = conn.prepareStatement("INSERT INTO AGENTS (NICKNAME, AGE, PHONE_NUMBER) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            st.setString(1, agent.getNickName());
+            st.setInt(2, agent.getAge());
+            st.setString(3, agent.getPhoneNumber());
 
-            statement.setInt(1, agent.getAge());
-            statement.setString(2, agent.getNickName());
-            statement.setString(3, agent.getPhoneNumber());
+            int count = st.executeUpdate();
+            DBUtils.checkUpdatesCount(count, agent, true);
 
-            statement.executeUpdate();
-
-            ResultSet rs = statement.getGeneratedKeys();
-            rs.next();
-            agent.setId(rs.getLong(1));
-
-            connection.commit();
+            Long id = DBUtils.getId(st.getGeneratedKeys());
+            agent.setId(id);
+            conn.commit();
         } catch (SQLException ex) {
-            if (connection != null) {
-                try {
-                    connection.rollback();
-                } catch (SQLException ex1) {
-                    logger.log(Level.SEVERE, "rollback error", ex1);
-                }
-            }
-
-            logger.log(Level.SEVERE, "error when creating agent", ex);
+            String msg = "Error when inserting agent into db";
+            logger.log(Level.SEVERE, msg, ex);
+            throw new ServiceFailureException(msg, ex);
         } finally {
-            try {
-                if (connection != null) {
-                    connection.setAutoCommit(true);
-                }
-            } catch (SQLException ex) {
-                logger.log(Level.SEVERE, "error in changing autocommit value", ex);
-            }
+            DBUtils.doRollbackQuietly(conn);
+            DBUtils.closeQuietly(conn, st);
         }
     }
 
@@ -87,12 +79,12 @@ public class AgentManagerImpl implements AgentManager {
         checkDataSource();
         validateAgent(agent);
         Connection connection = null;
-        PreparedStatement statement;
+        PreparedStatement statement = null;
 
         try {
             connection = dataSource.getConnection();
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement("UPDATE AGENT SET AGE=?, NICKNAME=?, PHONENUMBER=? WHERE ID=?");
+            statement = connection.prepareStatement("UPDATE AGENTS SET AGE=?, NICKNAME=?, PHONE_NUMBER=? WHERE ID=?");
 
             statement.setInt(1, agent.getAge());
             statement.setString(2, agent.getNickName());
@@ -133,12 +125,11 @@ public class AgentManagerImpl implements AgentManager {
         try {
             connection = dataSource.getConnection();
             connection.setAutoCommit(false);
-            statement = connection.prepareStatement("DELETE FROM AGENT WHERE ID=?");
+            statement = connection.prepareStatement("DELETE FROM AGENTS WHERE ID=?");
 
             statement.setLong(1, agent.getId());
 
             statement.executeUpdate();
-            
             connection.commit();
         } catch (SQLException ex) {
             if (connection != null) {
@@ -165,12 +156,17 @@ public class AgentManagerImpl implements AgentManager {
     public Agent getAgentById(Long id) {
         checkDataSource();
         Connection connection = null;
-        PreparedStatement statement;
+        PreparedStatement statement = null;
         Agent agent;
+        
+        if (id == null) {
+            logger.log(Level.SEVERE, "id is null");
+            throw new IllegalArgumentException("id is null");
+        }
 
         try {
             connection = dataSource.getConnection();
-            statement = connection.prepareStatement("SELECT AGE, NICKNAME, PHONENUMBER FROM AGENT WHERE ID=?");
+            statement = connection.prepareStatement("SELECT AGE, NICKNAME, PHONE_NUMBER FROM AGENTS WHERE ID=?");
 
             statement.setLong(1, id);
 
@@ -178,46 +174,34 @@ public class AgentManagerImpl implements AgentManager {
             if (rs.next()) {
                 agent = new Agent();
                 agent.setId(id);
-                agent.setAge(rs.getInt("AGE"));
-                agent.setNickName(rs.getString("NICKNAME"));
-                agent.setPhoneNumber(rs.getString("PHONENUMBER"));
+                agent.setAge(rs.getInt(1));
+                agent.setNickName(rs.getString(2));
+                agent.setPhoneNumber(rs.getString(3));
 
                 return agent;
+            } else {
+                return null;
             }
         } catch (SQLException ex) {
-            if (connection != null) {
-                try {
-                    connection.rollback();
-                } catch (SQLException ex1) {
-                    logger.log(Level.SEVERE, "rollback error", ex1);
-                }
-            }
-
-            logger.log(Level.SEVERE, "error when getting agent by id", ex);
+            String msg = "Error when getting agent with id = " + id + " from DB";
+            logger.log(Level.SEVERE, msg, ex);
+            throw new ServiceFailureException(msg, ex);
         } finally {
-            try {
-                if (connection != null) {
-                    connection.setAutoCommit(true);
-                }
-            } catch (SQLException ex) {
-                logger.log(Level.SEVERE, "error in changing autocommit value", ex);
-            }
+            DBUtils.closeQuietly(connection, statement);
         }
-
-        return null;
     }
 
     @Override
     public List<Agent> findAllAgents() {
         checkDataSource();
         Connection connection = null;
-        PreparedStatement statement;
+        PreparedStatement statement = null;
         Agent agent;
         List<Agent> agents = new ArrayList<>();
 
         try {
             connection = dataSource.getConnection();
-            statement = connection.prepareStatement("SELECT ID, AGE, NICKNAME, PHONENUMBER FROM AGENT");
+            statement = connection.prepareStatement("SELECT ID, AGE, NICKNAME, PHONE_NUMBER FROM AGENTS");
 
             ResultSet rs = statement.executeQuery();
 
@@ -231,23 +215,11 @@ public class AgentManagerImpl implements AgentManager {
                 agents.add(agent);
             }
         } catch (SQLException ex) {
-            if (connection != null) {
-                try {
-                    connection.rollback();
-                } catch (SQLException ex1) {
-                    logger.log(Level.SEVERE, "rollback error", ex1);
-                }
-            }
-
-            logger.log(Level.SEVERE, "error when finding all agents", ex);
+            String msg = "Error when getting all agents from DB";
+            logger.log(Level.SEVERE, msg, ex);
+            throw new ServiceFailureException(msg, ex);
         } finally {
-            try {
-                if (connection != null) {
-                    connection.setAutoCommit(true);
-                }
-            } catch (SQLException ex) {
-                logger.log(Level.SEVERE, "error in changing autocommit value", ex);
-            }
+            DBUtils.closeQuietly(connection, statement);
         }
 
         return agents;

@@ -7,21 +7,18 @@ package managers;
 
 import common.DBUtils;
 import entities.Agent;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sql.DataSource;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.junit.After;
 
 /**
  *
@@ -31,25 +28,26 @@ public class AgentManagerImplTest {
 
     private AgentManagerImpl agentManager;
     private DataSource ds;
-    
+
     private static DataSource prepareDataSource() {
         BasicDataSource ds = new BasicDataSource();
-        ds.setUrl("jdbc:derby:memory:mi6secretDB;create=true");
-        
+        ds.setUrl("jdbc:derby:memory:mi6testDB;create=true");
+
         return ds;
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws SQLException {
         ds = prepareDataSource();
         agentManager = new AgentManagerImpl();
         agentManager.setDataSource(ds);
-        
-        try {
-            DBUtils.executeSqlScript(ds, AgentManager.class.getResourceAsStream("createTables.sql"));
-        } catch (SQLException ex) {
-            Logger.getLogger(AgentManagerImplTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        DBUtils.executeSqlScript(ds,getClass().getResource("/createTables.sql"));
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+        DBUtils.executeSqlScript(ds, getClass().getResource("/dropTables.sql"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -101,7 +99,7 @@ public class AgentManagerImplTest {
     public void testUpdateNullAgent() {
         agentManager.updateAgent(null);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateAgentWithWrongAge() {
         Agent agent = newAgent(24, "Shadow", "555324846");
@@ -169,7 +167,7 @@ public class AgentManagerImplTest {
         assertEquals("Blue", agent.getNickName());
         assertNull(agent.getPhoneNumber());
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void testDeleteNullAgent() {
         agentManager.deleteAgent(null);
@@ -200,7 +198,7 @@ public class AgentManagerImplTest {
         assertEquals(actual, expected);
         assertDeepEquals(actual, expected);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void testGetAgentByNullId() {
         agentManager.getAgentById(null);

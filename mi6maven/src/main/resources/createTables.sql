@@ -1,12 +1,12 @@
 CREATE TABLE AGENTS (
-    ID integer,
+    ID integer NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     NICKNAME varchar(255),
     AGE integer,
     PHONE_NUMBER varchar(15)
 );
 
 CREATE TABLE MISSIONS (
-    ID integer,
+    ID integer NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     CODENAME varchar(255),
     OBJECTIVE varchar(255),
     LOCATION varchar(255),
@@ -14,7 +14,7 @@ CREATE TABLE MISSIONS (
 );
 
 CREATE TABLE ASSIGNMENTS (
-    ID integer,
+    ID integer NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     AGENT_ID integer,
     MISSION_ID integer,
     START_DATE date,

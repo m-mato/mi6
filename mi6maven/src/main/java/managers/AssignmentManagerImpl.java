@@ -64,30 +64,36 @@ public class AssignmentManagerImpl implements AssignmentManager {
 
     @Override
     public void deleteAssignment(Assignment assignment) {
-        jdbc.update("DELETE FROM ASSIGNMENT WHERE id=?", assignment.getId());
+        jdbc.update("DELETE FROM ASSIGNMENTS WHERE id=?", assignment.getId());
     }
 
     @Override
     public Assignment getAssignmentById(Long id) {
-        return jdbc.queryForObject("SELECT * FROM ASSIGNMENT WHERE ID=?", MAPPER, id);
+        return jdbc.queryForObject("SELECT * FROM ASSIGNMENTS WHERE ID=?", MAPPER, id);
     }
 
     @Override
     public List<Assignment> findAllAssignments() {
-        return jdbc.query("SELECT * FROM ASSIGNMENT", MAPPER);
+        return jdbc.query("SELECT * FROM ASSIGNMENTS", MAPPER);
     }
 
     @Override
     public List<Assignment> findAssignmentsForAgent(Agent agent) {
-        return jdbc.query("SELECT * FROM ASSIGNMENT WHERE AGENT_ID=?",MAPPER, agent.getId());
+        return jdbc.query("SELECT * FROM ASSIGNMENTS WHERE AGENT_ID=?",MAPPER, agent.getId());
     }
 
     @Override
     public List<Assignment> findAssignmentsForMission(Mission mission) {
-        return jdbc.query("SELECT * FROM ASSIGNMENT WHERE MISSION_ID=?",MAPPER, mission.getId());
+        return jdbc.query("SELECT * FROM ASSIGNMENTS WHERE MISSION_ID=?",MAPPER, mission.getId());
     }
 
     private void validateAssignment(Assignment assignment) {
+        if (assignment == null) {
+            String message = "assignment cannot be null";
+            logger.log(Level.WARNING, message);
+            throw new IllegalArgumentException(message);
+        }
+        
         if (assignment.getAgent() == null) {
             String message = "agent cannot be null";
             logger.log(Level.WARNING, message);
