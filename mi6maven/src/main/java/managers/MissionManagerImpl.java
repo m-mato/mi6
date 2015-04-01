@@ -47,7 +47,7 @@ public class MissionManagerImpl implements MissionManager {
         checkDataSource();
         validateMission(mission);
         if (mission.getId() != null) {
-            throw new IllegalEntityException("agent id is already set");
+            throw new IllegalEntityException("mission id is already set");
         }       
         Connection conn = null;
         PreparedStatement st = null;

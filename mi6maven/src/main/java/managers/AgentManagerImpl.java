@@ -37,7 +37,7 @@ public class AgentManagerImpl implements AgentManager {
 
     private void checkDataSource() {
         if (dataSource == null) {
-            throw new IllegalStateException("DataSource is not set");
+        throw new IllegalStateException("DataSource is not set");
         }
     }
 
