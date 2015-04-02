@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package managers;
+package backend.managers;
 
-import common.DBUtils;
-import entities.Agent;
-import java.io.InputStream;
+import backend.managers.AgentManagerImpl;
+import backend.common.DBUtils;
+import backend.entities.Agent;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,6 +19,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.After;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -27,7 +29,7 @@ import org.junit.After;
 public class AgentManagerImplTest {
 
     private AgentManagerImpl agentManager;
-    private DataSource ds;
+    private DataSource dataSource;
 
     private static DataSource prepareDataSource() {
         BasicDataSource ds = new BasicDataSource();
@@ -38,16 +40,17 @@ public class AgentManagerImplTest {
 
     @Before
     public void setUp() throws SQLException {
-        ds = prepareDataSource();
-        agentManager = new AgentManagerImpl();
-        agentManager.setDataSource(ds);
+        dataSource = prepareDataSource();
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+        agentManager = (AgentManagerImpl)context.getBean("agentManagerImpl");
+        agentManager.setDataSource(dataSource);
 
-        DBUtils.executeSqlScript(ds,getClass().getResource("/createTables.sql"));
+        DBUtils.executeSqlScript(dataSource,getClass().getResource("/createTables.sql"));
     }
 
     @After
     public void tearDown() throws SQLException {
-        DBUtils.executeSqlScript(ds, getClass().getResource("/dropTables.sql"));
+        DBUtils.executeSqlScript(dataSource, getClass().getResource("/dropTables.sql"));
     }
 
     @Test(expected = IllegalArgumentException.class)

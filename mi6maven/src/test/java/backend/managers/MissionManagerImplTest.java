@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package managers;
+package backend.managers;
 
-import common.DBUtils;
-import entities.Mission;
+import backend.managers.MissionManagerImpl;
+import backend.common.DBUtils;
+import backend.entities.Mission;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,6 +19,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -26,7 +29,7 @@ import static org.junit.Assert.*;
 public class MissionManagerImplTest {
 
     private MissionManagerImpl manager;
-    private DataSource ds;
+    private DataSource dataSource;
 
     private static DataSource prepareDataSource() {
         BasicDataSource ds = new BasicDataSource();
@@ -37,16 +40,17 @@ public class MissionManagerImplTest {
 
     @Before
     public void setUp() throws SQLException {
-        ds = prepareDataSource();
-        manager = new MissionManagerImpl();
-        manager.setDataSource(ds);
+        dataSource = prepareDataSource();
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+        manager = (MissionManagerImpl)context.getBean("missionManagerImpl");
+        manager.setDataSource(dataSource);
 
-        DBUtils.executeSqlScript(ds,getClass().getResource("/createTables.sql"));
+        DBUtils.executeSqlScript(dataSource,getClass().getResource("/createTables.sql"));
     }
 
     @After
     public void tearDown() throws SQLException {
-        DBUtils.executeSqlScript(ds, getClass().getResource("/dropTables.sql"));
+        DBUtils.executeSqlScript(dataSource, getClass().getResource("/dropTables.sql"));
     }
 
     @Test
@@ -169,18 +173,28 @@ public class MissionManagerImplTest {
 
     @Test
     public void deleteMission() {
-        Mission m1 = newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
-        Mission m2 = newMission("Operation Monkey", "Save the Monkey", "Slovak republic", null);
-        manager.createMission(m1);
-        manager.createMission(m2);
+        Mission mission = newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
+        Mission mission2 = newMission("Operation Monkey", "Save the Monkey", "Slovak republic", null);
+        manager.createMission(mission);
+        manager.createMission(mission2);
 
-        assertNotNull(manager.getMissionById(m1.getId()));
-        assertNotNull(manager.getMissionById(m2.getId()));
+        List<Mission> expected = Arrays.asList(mission, mission2);
+        List<Mission> actual = manager.findAllMissions();
+        assertEquals(actual, expected);
+        assertDeepEquals(actual, expected);
 
-        manager.deleteMission(m1);
+        Long missionId = mission.getId();
+        Long mission2Id = mission2.getId();
 
-        assertNull(manager.getMissionById(m1.getId()));
-        assertNotNull(manager.getMissionById(m2.getId()));
+        mission = manager.getMissionById(missionId);
+        mission2 = manager.getMissionById(mission2Id);
+
+        manager.deleteMission(mission);
+
+        expected = Arrays.asList(mission2);
+        actual = manager.findAllMissions();
+        assertEquals(actual, expected);
+        assertDeepEquals(actual, expected);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -190,8 +204,6 @@ public class MissionManagerImplTest {
 
     @Test
     public void getMissionById() {
-        assertNull(manager.getMissionById(1l));
-
         Mission mission = newMission("Operation Anaconda", "Kill the Anaconda", "Czech republic, Brno", "It is 20 meters Long");
         manager.createMission(mission);
         Long missionId = mission.getId();

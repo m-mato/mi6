@@ -1,4 +1,4 @@
-package common;
+package backend.common;
 
 /**
  * This exception is thrown when you try to use an entity that can not be 

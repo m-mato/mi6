@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package managers;
+package backend.managers;
 
-import entities.Agent;
-import entities.Assignment;
-import entities.Mission;
+import backend.entities.Agent;
+import backend.entities.Assignment;
+import backend.entities.Mission;
 import java.util.List;
 
 /**

@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package managers;
+package backend.managers;
 
-import common.DBUtils;
-import entities.Agent;
-import entities.Assignment;
-import entities.Mission;
+import backend.managers.AgentManagerImpl;
+import backend.managers.MissionManagerImpl;
+import backend.managers.AssignmentManagerImpl;
+import backend.common.DBUtils;
+import backend.entities.Agent;
+import backend.entities.Assignment;
+import backend.entities.Mission;
 import java.sql.SQLException;
 import java.util.List;
 import org.junit.Test;
@@ -20,6 +23,8 @@ import java.util.Comparator;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.After;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -48,7 +53,8 @@ public class AssignmentManagerImplITest {
     public void setUp() throws SQLException {
         
         dataSource = prepareDataSource();
-        manager = new AssignmentManagerImpl();
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+        manager = (AssignmentManagerImpl)context.getBean("assignmentManagerImpl");
         manager.setDataSource(dataSource);
         
         agent = newAgent(25, "devil", "6464564");
@@ -56,9 +62,9 @@ public class AssignmentManagerImplITest {
         
         DBUtils.executeSqlScript(dataSource,getClass().getResource("/createTables.sql"));
         
-        agentManager = new AgentManagerImpl();
+        agentManager = (AgentManagerImpl)context.getBean("agentManagerImpl");
         agentManager.setDataSource(dataSource);
-        missionManager = new MissionManagerImpl();
+        missionManager = (MissionManagerImpl)context.getBean("missionManagerImpl");
         missionManager.setDataSource(dataSource);
         
         agentManager.createAgent(agent);
@@ -263,8 +269,8 @@ public class AssignmentManagerImplITest {
 
         assertEquals(assignment, assignmentFromDB);
         assertEquals(assignment2, assignmentFromDB2);
-        AssignmentManagerImplITest.this.assertDeepEquals(assignment, assignmentFromDB);
-        AssignmentManagerImplITest.this.assertDeepEquals(assignment2, assignmentFromDB2);
+        assertDeepEquals(assignment, assignmentFromDB);
+        assertDeepEquals(assignment2, assignmentFromDB2);
     }
 
     @Test
