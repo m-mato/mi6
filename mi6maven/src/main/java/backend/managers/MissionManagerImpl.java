@@ -122,6 +122,15 @@ public class MissionManagerImpl implements MissionManager {
 
         return missions;
     }
+    
+    @Override
+    public List<Mission> findMissionsWithoutAgent() {
+        checkDataSource();
+        
+        List<Mission> missions = jdbc.query("SELECT * FROM MISSIONS WHERE NOT EXIST(SELECT * FROM ASSIGNMENTS WHERE MISSIONS.ID = ASSIGNMENTS.MISSION_ID)", MAPPER);
+        
+        return missions;
+    }
 
     private void validateMission(Mission mission) {
         if (mission == null) {
@@ -148,5 +157,7 @@ public class MissionManagerImpl implements MissionManager {
             throw new IllegalArgumentException(message);
         }
     }
+
+    
 
 }
