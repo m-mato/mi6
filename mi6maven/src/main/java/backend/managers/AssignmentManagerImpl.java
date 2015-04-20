@@ -9,10 +9,13 @@ import backend.common.IllegalEntityException;
 import backend.entities.Agent;
 import backend.entities.Assignment;
 import backend.entities.Mission;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,8 +47,15 @@ public class AssignmentManagerImpl implements AssignmentManager {
         assignment.setId(rs.getLong("ID"));
         assignment.setAgent(agentManager.getAgentById(rs.getLong("AGENT_ID")));
         assignment.setMission(missionManager.getMissionById(rs.getLong("MISSION_ID")));
-        assignment.setStartDate(rs.getString("START_DATE"));
-        assignment.setEndDate(rs.getString("END_DATE"));
+        //assignment.setStartDate(rs.getString("START_DATE"));
+        //assignment.setEndDate(rs.getString("END_DATE"));
+        assignment.setStartDate(java.util.Date.from(Instant.ofEpochMilli(rs.getLong("START_DATE"))));
+        BigDecimal endDateMili = rs.getBigDecimal("END_DATE");
+        if (endDateMili == null) {
+            assignment.setEndDate(null);
+        } else {
+            assignment.setEndDate(java.util.Date.from(Instant.ofEpochMilli(endDateMili.longValue())));
+        }
 
         return assignment;
     };
@@ -77,8 +87,15 @@ public class AssignmentManagerImpl implements AssignmentManager {
 
             ps.setLong(1, assignment.getAgent().getId());
             ps.setLong(2, assignment.getMission().getId());
-            ps.setString(3, assignment.getStartDate());
-            ps.setString(4, assignment.getEndDate());
+            //ps.setString(3, assignment.getStartDate());
+            //ps.setString(4, assignment.getEndDate());
+            ps.setLong(3, assignment.getStartDate().getTime());
+            java.util.Date endDate = assignment.getEndDate();
+            if (endDate == null) {
+                ps.setNull(4, java.sql.Types.BIGINT);
+            } else {
+                ps.setLong(4, endDate.getTime());
+            }
             return ps;
         };
 
@@ -90,9 +107,21 @@ public class AssignmentManagerImpl implements AssignmentManager {
     public void updateAssignment(Assignment assignment) {
         checkDataSource();
         validateAssignment(assignment);
-
-        jdbc.update("UPDATE ASSIGNMENTS SET AGENT_ID=?, MISSION_ID=?, START_DATE=?, END_DATE=?  WHERE ID=?", assignment.getAgent().getId(),
-                assignment.getMission().getId(), assignment.getStartDate(), assignment.getEndDate(), assignment.getId());
+        java.util.Date oldEndDate = getAssignmentById(assignment.getId()).getEndDate();
+        java.util.Date endDate = assignment.getEndDate();
+        
+        if (endDate == null) {           
+            if(oldEndDate != null) {
+                String message = "Error in updateAssignment: cannot change end date of Assignment from instance to null.";
+                logger.log(Level.WARNING, message);
+                throw new IllegalArgumentException(message);              
+            }
+            jdbc.update("UPDATE ASSIGNMENTS SET AGENT_ID=?, MISSION_ID=?, START_DATE=? WHERE ID=?", assignment.getAgent().getId(),
+                    assignment.getMission().getId(), assignment.getStartDate().getTime(), assignment.getId());
+        } else {
+            jdbc.update("UPDATE ASSIGNMENTS SET AGENT_ID=?, MISSION_ID=?, START_DATE=?, END_DATE=?  WHERE ID=?", assignment.getAgent().getId(),
+                    assignment.getMission().getId(), assignment.getStartDate().getTime(), assignment.getEndDate().getTime(), assignment.getId());
+        }
     }
 
     @Override
@@ -118,7 +147,7 @@ public class AssignmentManagerImpl implements AssignmentManager {
         }
 
         Assignment assignment = jdbc.queryForObject("SELECT ID, AGENT_ID, MISSION_ID, START_DATE, END_DATE FROM ASSIGNMENTS WHERE ID=?", MAPPER, id);
-        
+
         return assignment;
     }
 
