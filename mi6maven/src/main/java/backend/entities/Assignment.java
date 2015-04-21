@@ -5,6 +5,7 @@
  */
 package backend.entities;
 
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -16,8 +17,8 @@ public class Assignment {
     private Long id;
     private Agent agent;
     private Mission mission;
-    private String startDate;
-    private String endDate;
+    private Date startDate;
+    private Date endDate;
     
     public Assignment() {
     
@@ -47,19 +48,19 @@ public class Assignment {
         this.mission = mission;
     }
 
-    public String getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
@@ -83,7 +84,7 @@ public class Assignment {
             return false;
         }
         final Assignment other = (Assignment) obj;
-        if (this.id != other.id) {
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         if (!Objects.equals(this.agent, other.agent)) {
@@ -95,10 +96,7 @@ public class Assignment {
         if (!Objects.equals(this.startDate, other.startDate)) {
             return false;
         }
-        if (!Objects.equals(this.endDate, other.endDate)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.endDate, other.endDate);
     }
      
     

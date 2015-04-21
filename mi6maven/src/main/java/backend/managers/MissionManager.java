@@ -19,4 +19,5 @@ public interface MissionManager {
     void deleteMission(Mission mission);
     Mission getMissionById(Long id); 
     List<Mission> findAllMissions();
+    List<Mission> findMissionsWithoutAgent();
 }

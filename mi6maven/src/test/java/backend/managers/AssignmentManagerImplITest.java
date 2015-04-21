@@ -5,14 +5,12 @@
  */
 package backend.managers;
 
-import backend.managers.AgentManagerImpl;
-import backend.managers.MissionManagerImpl;
-import backend.managers.AssignmentManagerImpl;
 import backend.common.DBUtils;
 import backend.entities.Agent;
 import backend.entities.Assignment;
 import backend.entities.Mission;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -20,6 +18,7 @@ import org.junit.Before;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.After;
@@ -39,9 +38,12 @@ public class AssignmentManagerImplITest {
     private AgentManagerImpl agentManager = new AgentManagerImpl();
     private MissionManagerImpl missionManager = new MissionManagerImpl();
 
-    private static final String NOW = "25.3.2015";
-    private static final String EPOCH = "1.1.1970";
-
+    //private static final String NOW = "25.3.2015";
+    //private static final String EPOCH = "1.1.1970";
+    
+    private static final Date NOW = Date.from(Instant.now());
+    private static final Date EPOCH = Date.from(Instant.EPOCH);
+    
     private static DataSource prepareDataSource() {
         BasicDataSource ds = new BasicDataSource();
         ds.setUrl("jdbc:derby:memory:mi6testDB;create=true");
@@ -78,7 +80,7 @@ public class AssignmentManagerImplITest {
 
     @Test
     public void createAssignment() {
-        Assignment activeAssignment = newAssignment(agent, mission, EPOCH, NOW);
+        Assignment activeAssignment = newAssignment(agent, mission, EPOCH, null);
         Assignment fulfilledAssignment = newAssignment(agent, mission, EPOCH, NOW);
 
         manager.createAssignment(activeAssignment);
@@ -124,7 +126,8 @@ public class AssignmentManagerImplITest {
                 "Save the Monkey",
                 "Slovak republic",
                 null);
-        String anotherDate = "15.8.2004";
+        //String anotherDate = "15.8.2004";
+        Date anotherDate= Date.from(Instant.ofEpochSecond(100000));
         
         agentManager.createAgent(anotherAgent);
         missionManager.createMission(anotherMission);
@@ -203,14 +206,14 @@ public class AssignmentManagerImplITest {
         manager.updateAssignment(assignment);
     }
 
-//    @Test(expected = IllegalArgumentException.class)
-//    public void updateAssignmentFromFulfilledToActive() {
-//        Assignment assignment = newAssignment(agent, mission, EPOCH, NOW);
-//        manager.createAssignment(assignment);
-//
-//        assignment.setEndDate(null);
-//        manager.updateAssignment(assignment);
-//    }
+    @Test(expected = IllegalArgumentException.class)
+    public void updateAssignmentFromFulfilledToActive() {
+        Assignment assignment = newAssignment(agent, mission, EPOCH, NOW);
+        manager.createAssignment(assignment);
+
+        assignment.setEndDate(null);
+        manager.updateAssignment(assignment);
+    }
     
     @Test(expected=IllegalArgumentException.class)
     public void deleteNullAssignment() {
@@ -358,7 +361,7 @@ public class AssignmentManagerImplITest {
         assertDeepEquals(assignmentsFromDB, actualAssignments);
     }
 
-    private static Assignment newAssignment(Agent agent, Mission mission, String startDate, String endDate) {
+    private static Assignment newAssignment(Agent agent, Mission mission, Date startDate, Date endDate) {
         Assignment assignment = new Assignment();
         assignment.setAgent(agent);
         assignment.setMission(mission);
@@ -378,13 +381,13 @@ public class AssignmentManagerImplITest {
     }
 
     private Mission newMission(String codeName, String objective, String location, String notes) {
-        Mission mission = new Mission();
-        mission.setCodeName(codeName);
-        mission.setObjective(objective);
-        mission.setLocation(location);
-        mission.setNotes(notes);
+        Mission newMission = new Mission();
+        newMission.setCodeName(codeName);
+        newMission.setObjective(objective);
+        newMission.setLocation(location);
+        newMission.setNotes(notes);
 
-        return mission;
+        return newMission;
     }
 
     private void checkCreatedAssignment(Assignment assignment) {
