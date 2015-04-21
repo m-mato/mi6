@@ -1,17 +1,10 @@
 ----------------------------------------------------------------
-<<<<<<< HEAD
-Thu Apr 02 15:30:48 CEST 2015:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-014c-7a53-b237-000006e928d0 
+Thu Apr 02 17:21:39 CEST 2015:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-014c-7ab9-30b7-000006e72fa8 
 on database directory memory:C:\Users\Andrej Halaj\Documents\NetBeansProjects\mi6\mi6maven\mi6testDB  with class loader sun.misc.Launcher$AppClassLoader@42a57993 
 Loaded from file:/C:/Users/Andrej%20Halaj/.m2/repository/org/apache/derby/derby/10.8.1.2/derby-10.8.1.2.jar
-=======
-Wed Apr 01 19:27:03 CEST 2015:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-014c-7605-a25b-00000332d268 
-on database directory memory:/home/mato/Documents/Projects/Java/mi6/mi6maven/mi6testDB  with class loader sun.misc.Launcher$AppClassLoader@4aa298b7 
-Loaded from file:/home/mato/.m2/repository/org/apache/derby/derby/10.8.1.2/derby-10.8.1.2.jar
->>>>>>> origin/master
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_31-b13
-user.dir=/home/mato/Documents/Projects/Java/mi6/mi6maven
+java.runtime.version=1.8.0_40-b26
+user.dir=C:\Users\Andrej Halaj\Documents\NetBeansProjects\mi6\mi6maven
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
