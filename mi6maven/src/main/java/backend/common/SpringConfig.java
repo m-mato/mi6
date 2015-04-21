@@ -18,48 +18,49 @@ import javax.sql.DataSource;
 import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.DERBY;
 
 import backend.managers.*;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
  * Spring configuration class.
- * 
+ *
  * @author Matej Majdis
  */
-@Configuration 
+@Configuration
 @EnableTransactionManagement
 public class SpringConfig {
-    
+
     @Bean
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()
-                .setType(DERBY)
-                .addScript("classpath:createTables.sql")
-                //.addScript("")
-                .build();
+         .setType(DERBY)
+         .addScript("classpath:createTables.sql")
+         .addScript("classpath:insertTestData.sql")
+         .build();
     }
-    
+
     @Bean
     public PlatformTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dataSource());
     }
-    
+
     @Bean
     public AgentManager agentManager() {
         AgentManagerImpl am = new AgentManagerImpl();
         am.setDataSource(dataSource());
         return am;
     }
-    
+
     @Bean
     public MissionManager missionManager() {
         MissionManagerImpl mm = new MissionManagerImpl();
         mm.setDataSource(dataSource());
         return mm;
     }
-    
+
     @Bean
     public AssignmentManager assignmentManager() {
         AssignmentManagerImpl am = new AssignmentManagerImpl();
-        am.setDataSource(dataSource());       
+        am.setDataSource(dataSource());
         return am;
     }
 }
