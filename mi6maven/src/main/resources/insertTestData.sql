@@ -1,0 +1,17 @@
+-- my-test-data.sql
+
+INSERT INTO AGENTS (NICKNAME, AGE, PHONE_NUMBER) VALUES ('Devil',45,'455445');
+
+INSERT INTO AGENTS (NICKNAME, AGE, PHONE_NUMBER) VALUES ('Shadow',48,'748111');
+
+INSERT INTO AGENTS (NICKNAME, AGE, PHONE_NUMBER) VALUES ('Falo',21,'654654');
+
+INSERT INTO MISSIONS (CODENAME, OBJECTIVE, LOCATION, NOTES) VALUES ('Operation monkey','Save the monkey','South America',NULL);
+
+INSERT INTO MISSIONS (CODENAME, OBJECTIVE, LOCATION, NOTES) VALUES ('Operation anaconda','Kill the anaconda','Africa','It is 20 meters long');
+
+INSERT INTO MISSIONS (CODENAME, OBJECTIVE, LOCATION, NOTES) VALUES ('Operation beer','Drink 20 beers','Brno','You have 2 minutes');
+
+INSERT INTO MISSIONS (CODENAME, OBJECTIVE, LOCATION, NOTES) VALUES ('Operation no idea','Create some mission','Here',NULL);
+
+INSERT INTO MISSIONS (CODENAME, OBJECTIVE, LOCATION, NOTES) VALUES ('Operation no idea 2','Create some more missions','Here',NULL);

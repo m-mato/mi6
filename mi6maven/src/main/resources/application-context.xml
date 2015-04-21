@@ -28,10 +28,6 @@ http://www.springframework.org/schema/tx/spring-tx-3.0.xsd"
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="org.apache.derby.jdbc.ClientDriver"/>
         <property name="url" value="jdbc:derby:memory:mi6testDB;create=true"/>
-        <!--<property name="driverClassName" value="org.apache.derby.jdbc.ClientDriver"/>
-        <property name="url" value="jdbc:derby://localhost:1527/mi6secretDB"/>
-        <property name="username" value="M"/>
-        <property name="password" value=""/>-->
     </bean>
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
