@@ -11,6 +11,7 @@ import javax.swing.UIManager;
 /**
  *
  * @author Andrej Halaj
+ * @author Matej Majdis
  */
 public class MainFrame extends javax.swing.JFrame {
 
@@ -19,11 +20,19 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
-
-        if (entitiesPanel.getSelectedIndex() == 1) {
-            missionsWithoutAgentCheckBox.setVisible(true);
-        } else {
-            missionsWithoutAgentCheckBox.setVisible(false);
+        
+        switch(entitiesPanel.getSelectedIndex()) {
+            case 0:
+                showAgentsActions();
+                break;
+            case 1:
+                showMissionsActions();
+                break;
+            case 2:
+                showAssignmentsActions();
+                break;
+            default:
+                //
         }
     }
 
@@ -49,12 +58,12 @@ public class MainFrame extends javax.swing.JFrame {
         editEntityButton = new javax.swing.JButton();
         editEntityButton1 = new javax.swing.JButton();
         missionsWithoutAgentCheckBox = new javax.swing.JCheckBox();
+        filterComboBox = new javax.swing.JComboBox();
+        filterCheckBox = new javax.swing.JCheckBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         agentsMenu = new javax.swing.JMenu();
         addAgentMenuItem = new javax.swing.JMenuItem();
-        missionsMenu = new javax.swing.JMenu();
         addMissionMenuItem = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
         addAssignmentMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -151,9 +160,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         missionsWithoutAgentCheckBox.setText("Only Missions Without Agent");
 
-        agentsMenu.setText("Agents");
+        filterCheckBox.setText("Default");
 
-        addAgentMenuItem.setText("Add Agent");
+        agentsMenu.setText("Add");
+
+        addAgentMenuItem.setText("Agent");
         addAgentMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addAgentActionPerformed(evt);
@@ -161,31 +172,23 @@ public class MainFrame extends javax.swing.JFrame {
         });
         agentsMenu.add(addAgentMenuItem);
 
-        jMenuBar1.add(agentsMenu);
-
-        missionsMenu.setText("Missions");
-
-        addMissionMenuItem.setText("Add Mission");
+        addMissionMenuItem.setText("Mission");
         addMissionMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addMissionMenuItemActionPerformed(evt);
             }
         });
-        missionsMenu.add(addMissionMenuItem);
+        agentsMenu.add(addMissionMenuItem);
 
-        jMenuBar1.add(missionsMenu);
-
-        jMenu1.setText("Assignments");
-
-        addAssignmentMenuItem.setText("Add Assignment");
+        addAssignmentMenuItem.setText("Assignment");
         addAssignmentMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addAssignmentMenuItemActionPerformed(evt);
             }
         });
-        jMenu1.add(addAssignmentMenuItem);
+        agentsMenu.add(addAssignmentMenuItem);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(agentsMenu);
 
         setJMenuBar(jMenuBar1);
 
@@ -200,18 +203,26 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(editEntityButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(editEntityButton, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(missionsWithoutAgentCheckBox))
+                    .addComponent(missionsWithoutAgentCheckBox)
+                    .addComponent(filterCheckBox)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(102, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(74, Short.MAX_VALUE)
+                .addContainerGap(73, Short.MAX_VALUE)
                 .addComponent(entitiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(98, 98, 98)
                 .addComponent(missionsWithoutAgentCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(filterCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(editEntityButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -236,7 +247,7 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                MissionDialog dialog = new MissionDialog(MainFrame.this, false);
+                MissionDialog dialog = new MissionDialog(MainFrame.this, true);
                 dialog.setVisible(true);
             }
         });
@@ -246,17 +257,26 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                AssignmentDialog dialog = new AssignmentDialog(MainFrame.this, false);
+                AssignmentDialog dialog = new AssignmentDialog(MainFrame.this, true);
                 dialog.setVisible(true);
             }
         });
     }//GEN-LAST:event_addAssignmentMenuItemActionPerformed
 
     private void tabSwitched(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabSwitched
-        if (((JTabbedPane) evt.getSource()).getSelectedIndex() == 1) {
-            missionsWithoutAgentCheckBox.setVisible(true);
-        } else {
-            missionsWithoutAgentCheckBox.setVisible(false);
+     
+        switch(((JTabbedPane) evt.getSource()).getSelectedIndex()) {
+            case 0:
+                showAgentsActions();
+                break;
+            case 1:
+                showMissionsActions();
+                break;
+            case 2:
+                showAssignmentsActions();
+                break;
+            default:
+                //
         }
     }//GEN-LAST:event_tabSwitched
 
@@ -305,14 +325,34 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton editEntityButton;
     private javax.swing.JButton editEntityButton1;
     private javax.swing.JTabbedPane entitiesPanel;
-    private javax.swing.JMenu jMenu1;
+    private javax.swing.JCheckBox filterCheckBox;
+    private javax.swing.JComboBox filterComboBox;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JMenu missionsMenu;
     private javax.swing.JPanel missionsPanel;
     private javax.swing.JTable missionsTable;
     private javax.swing.JCheckBox missionsWithoutAgentCheckBox;
     // End of variables declaration//GEN-END:variables
+
+    private void showAgentsActions() {
+        missionsWithoutAgentCheckBox.setVisible(false);
+        filterCheckBox.setText("Only Agents with Missions:");
+        filterCheckBox.setVisible(true);
+        filterComboBox.setVisible(true);
+    }
+
+    private void showMissionsActions() {
+        missionsWithoutAgentCheckBox.setVisible(true);
+        filterCheckBox.setText("Only Missions with Agent:");
+        filterCheckBox.setVisible(true);
+        filterComboBox.setVisible(true);
+    }
+
+    private void showAssignmentsActions() {
+        missionsWithoutAgentCheckBox.setVisible(false);
+        filterCheckBox.setVisible(false);
+        filterComboBox.setVisible(false);
+    }
 }
