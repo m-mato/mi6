@@ -5,6 +5,7 @@
  */
 package frontend;
 
+import frontend.model.AgentsTableModel;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 
@@ -67,25 +68,22 @@ public class MainFrame extends javax.swing.JFrame {
         addAssignmentMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("MI6");
 
+        entitiesPanel.setToolTipText("");
         entitiesPanel.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 tabSwitched(evt);
             }
         });
 
-        agentsTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        agentsTable.setModel(new AgentsTableModel());
+        agentsTable.setToolTipText("");
         jScrollPane1.setViewportView(agentsTable);
+        if (agentsTable.getColumnModel().getColumnCount() > 0) {
+            agentsTable.getColumnModel().getColumn(0).setResizable(false);
+            agentsTable.getColumnModel().getColumn(1).setResizable(false);
+        }
 
         javax.swing.GroupLayout agentsPanelLayout = new javax.swing.GroupLayout(agentsPanel);
         agentsPanel.setLayout(agentsPanelLayout);
@@ -123,7 +121,7 @@ public class MainFrame extends javax.swing.JFrame {
         );
         missionsPanelLayout.setVerticalGroup(
             missionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
         );
 
         entitiesPanel.addTab("Missions", missionsPanel);
@@ -149,7 +147,7 @@ public class MainFrame extends javax.swing.JFrame {
         );
         assignmentsPanelLayout.setVerticalGroup(
             assignmentsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
         );
 
         entitiesPanel.addTab("Assignments", assignmentsPanel);
@@ -175,7 +173,7 @@ public class MainFrame extends javax.swing.JFrame {
         addMissionMenuItem.setText("Mission");
         addMissionMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addMissionMenuItemActionPerformed(evt);
+                addMissionActionPerformed(evt);
             }
         });
         agentsMenu.add(addMissionMenuItem);
@@ -183,7 +181,7 @@ public class MainFrame extends javax.swing.JFrame {
         addAssignmentMenuItem.setText("Assignment");
         addAssignmentMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addAssignmentMenuItemActionPerformed(evt);
+                addAssignmentActionPerformed(evt);
             }
         });
         agentsMenu.add(addAssignmentMenuItem);
@@ -236,32 +234,36 @@ public class MainFrame extends javax.swing.JFrame {
     private void addAgentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAgentActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
                 AgentDialog dialog = new AgentDialog(MainFrame.this, true);
                 dialog.setVisible(true);
+               
             }
         });
     }//GEN-LAST:event_addAgentActionPerformed
 
-    private void addMissionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMissionMenuItemActionPerformed
+    private void addMissionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMissionActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
                 MissionDialog dialog = new MissionDialog(MainFrame.this, true);
                 dialog.setVisible(true);
             }
         });
-    }//GEN-LAST:event_addMissionMenuItemActionPerformed
+    }//GEN-LAST:event_addMissionActionPerformed
 
-    private void addAssignmentMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAssignmentMenuItemActionPerformed
+    private void addAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAssignmentActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
                 AssignmentDialog dialog = new AssignmentDialog(MainFrame.this, true);
                 dialog.setVisible(true);
             }
         });
-    }//GEN-LAST:event_addAssignmentMenuItemActionPerformed
+    }//GEN-LAST:event_addAssignmentActionPerformed
 
     private void tabSwitched(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabSwitched
      

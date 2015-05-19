@@ -19,4 +19,5 @@ public interface AgentManager {
     void deleteAgent(Agent agent);
     Agent getAgentById(Long id);
     List<Agent> findAllAgents();
+    int getNumberOfAganets();
 }

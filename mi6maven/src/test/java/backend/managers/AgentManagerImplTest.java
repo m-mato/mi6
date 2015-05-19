@@ -30,7 +30,7 @@ public class AgentManagerImplTest {
 
     private AgentManagerImpl agentManager;
     private DataSource dataSource;
-
+    
     private static DataSource prepareDataSource() {
         BasicDataSource ds = new BasicDataSource();
         ds.setUrl("jdbc:derby:memory:mi6testDB;create=true");
