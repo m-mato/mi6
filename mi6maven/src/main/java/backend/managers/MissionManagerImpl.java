@@ -5,15 +5,18 @@
  */
 package backend.managers;
 
+import backend.common.DBUtils;
 import backend.common.IllegalEntityException;
 import backend.entities.Mission;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -48,6 +51,21 @@ public class MissionManagerImpl implements MissionManager {
         this.jdbc = new JdbcTemplate(dataSource);
     }
 
+    public void setDefaultDataSource() {
+        BasicDataSource ds = new BasicDataSource();
+        ds.setUrl("jdbc:derby:memory:mi6testDB;create=true");
+
+        try {
+            if (DBUtils.tryCreateTables(ds, getClass().getResource("/createTables.sql"))) {
+                DBUtils.executeSqlScript(ds, getClass().getResource("/insertTestData.sql"));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.WARNING, "Can not create tables in test Database");
+        }
+
+        this.setDataSource(ds);
+    }
+    
     private void checkDataSource() {
         if (dataSource == null) {
             throw new IllegalStateException("DataSource is not set");

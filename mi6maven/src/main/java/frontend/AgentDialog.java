@@ -5,6 +5,7 @@
  */
 package frontend;
 
+import backend.entities.Agent;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
@@ -68,12 +69,12 @@ public class AgentDialog extends javax.swing.JDialog {
 
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        phoneNumberLabel = new javax.swing.JLabel();
         phoneNumberTextField = new javax.swing.JTextField();
-        nameTextField1 = new javax.swing.JTextField();
+        nameTextField = new javax.swing.JTextField();
         ageSpinner = new javax.swing.JSpinner();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        nameLabel = new javax.swing.JLabel();
+        ageLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -96,11 +97,11 @@ public class AgentDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel3.setText("Phone Number:");
+        phoneNumberLabel.setText("Phone Number:");
 
-        jLabel1.setText("Nickname:");
+        nameLabel.setText("Nickname:");
 
-        jLabel2.setText("Age:");
+        ageLabel.setText("Age:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -116,12 +117,12 @@ public class AgentDialog extends javax.swing.JDialog {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel3)
-                        .addComponent(jLabel1)
-                        .addComponent(jLabel2))
+                        .addComponent(phoneNumberLabel)
+                        .addComponent(nameLabel)
+                        .addComponent(ageLabel))
                     .addGap(26, 26, 26)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(nameTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
+                        .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
                         .addComponent(phoneNumberTextField)
                         .addComponent(ageSpinner))
                     .addContainerGap(27, Short.MAX_VALUE)))
@@ -144,14 +145,14 @@ public class AgentDialog extends javax.swing.JDialog {
                         .addComponent(phoneNumberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel1)
-                                .addComponent(nameTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(nameLabel)
+                                .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGap(28, 28, 28)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel2)
+                                .addComponent(ageLabel)
                                 .addComponent(ageSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGap(36, 36, 36)
-                            .addComponent(jLabel3)))
+                            .addComponent(phoneNumberLabel)))
                     .addContainerGap(149, Short.MAX_VALUE)))
         );
 
@@ -223,15 +224,24 @@ public class AgentDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel ageLabel;
     private javax.swing.JSpinner ageSpinner;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JTextField nameTextField1;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JTextField nameTextField;
     private javax.swing.JButton okButton;
+    private javax.swing.JLabel phoneNumberLabel;
     private javax.swing.JTextField phoneNumberTextField;
     // End of variables declaration//GEN-END:variables
 
     private int returnStatus = RET_CANCEL;
+    
+    public Agent getAgent() {
+        Agent agent = new Agent();
+        agent.setNickName(nameTextField.getText());
+        agent.setAge((int)ageSpinner.getValue());
+        agent.setPhoneNumber(phoneNumberTextField.getText());
+        
+        return agent;
+    }
 }

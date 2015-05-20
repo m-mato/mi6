@@ -5,8 +5,14 @@
  */
 package frontend;
 
+import backend.entities.Agent;
+import backend.entities.Assignment;
+import backend.entities.Mission;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.time.Instant;
+import java.util.Date;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
@@ -18,7 +24,7 @@ import javax.swing.KeyStroke;
  * @author Andrej Halaj
  */
 public class AssignmentDialog extends javax.swing.JDialog {
-
+    
     /**
      * A return status code - returned if Cancel button has been pressed
      */
@@ -30,6 +36,8 @@ public class AssignmentDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form AssignmentDialog
+     * @param parent
+     * @param modal
      */
     public AssignmentDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -41,10 +49,12 @@ public class AssignmentDialog extends javax.swing.JDialog {
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), cancelName);
         ActionMap actionMap = getRootPane().getActionMap();
         actionMap.put(cancelName, new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 doClose(RET_CANCEL);
             }
         });
+        
     }
 
     /**
@@ -223,6 +233,7 @@ public class AssignmentDialog extends javax.swing.JDialog {
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 AssignmentDialog dialog = new AssignmentDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -250,4 +261,25 @@ public class AssignmentDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private int returnStatus = RET_CANCEL;
+
+    public Assignment getAssignment() {
+        Agent agent = new Agent();
+        agent.setNickName("Default");
+        agent.setAge(1);
+        agent.setPhoneNumber("000");
+        
+        Mission mission = new Mission();
+        mission.setCodeName("Default");
+        mission.setObjective("Default Objective");
+        mission.setLocation("Default Locaion");
+        mission.setNotes("Default Notes");
+        
+        Assignment assignment = new Assignment();
+        assignment.setAgent(agent);
+        assignment.setMission(mission);
+        assignment.setStartDate(Date.from(Instant.EPOCH));
+        assignment.setEndDate(null);
+        
+        return assignment;
+    }
 }

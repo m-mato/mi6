@@ -5,9 +5,18 @@
  */
 package frontend;
 
+import backend.entities.Agent;
+import backend.entities.Assignment;
+import backend.entities.Mission;
 import frontend.model.AgentsTableModel;
+import frontend.model.AssignmentsTableModel;
+import frontend.model.MissionsTableModel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JTabbedPane;
-import javax.swing.UIManager;
+import frontend.swingWorkers.AddAgentSwingWorker;
+import frontend.swingWorkers.AddAssignmentSwingWorker;
+import frontend.swingWorkers.AddMissionSwingWorker;
 
 /**
  *
@@ -21,8 +30,8 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
-        
-        switch(entitiesPanel.getSelectedIndex()) {
+
+        switch (entitiesPanel.getSelectedIndex()) {
             case 0:
                 showAgentsActions();
                 break;
@@ -33,7 +42,7 @@ public class MainFrame extends javax.swing.JFrame {
                 showAssignmentsActions();
                 break;
             default:
-                //
+            //
         }
     }
 
@@ -61,6 +70,7 @@ public class MainFrame extends javax.swing.JFrame {
         missionsWithoutAgentCheckBox = new javax.swing.JCheckBox();
         filterComboBox = new javax.swing.JComboBox();
         filterCheckBox = new javax.swing.JCheckBox();
+        addEntityButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         agentsMenu = new javax.swing.JMenu();
         addAgentMenuItem = new javax.swing.JMenuItem();
@@ -100,17 +110,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         entitiesPanel.addTab("Agents", agentsPanel);
 
-        missionsTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        missionsTable.setModel(new MissionsTableModel());
         jScrollPane2.setViewportView(missionsTable);
 
         javax.swing.GroupLayout missionsPanelLayout = new javax.swing.GroupLayout(missionsPanel);
@@ -126,17 +126,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         entitiesPanel.addTab("Missions", missionsPanel);
 
-        assignmentsTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        assignmentsTable.setModel(new AssignmentsTableModel());
         jScrollPane3.setViewportView(assignmentsTable);
 
         javax.swing.GroupLayout assignmentsPanelLayout = new javax.swing.GroupLayout(assignmentsPanel);
@@ -159,6 +149,13 @@ public class MainFrame extends javax.swing.JFrame {
         missionsWithoutAgentCheckBox.setText("Only Missions Without Agent");
 
         filterCheckBox.setText("Default");
+
+        addEntityButton.setText("Add");
+        addEntityButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addEntityButtonActionPerformed(evt);
+            }
+        });
 
         agentsMenu.setText("Add");
 
@@ -205,7 +202,8 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(filterCheckBox)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(22, 22, 22)
-                        .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(addEntityButton, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(102, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -222,6 +220,8 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(addEntityButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(editEntityButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(editEntityButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -236,9 +236,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             @Override
             public void run() {
-                AgentDialog dialog = new AgentDialog(MainFrame.this, true);
-                dialog.setVisible(true);
-               
+                addAgentDialogCalled();
             }
         });
     }//GEN-LAST:event_addAgentActionPerformed
@@ -248,8 +246,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             @Override
             public void run() {
-                MissionDialog dialog = new MissionDialog(MainFrame.this, true);
-                dialog.setVisible(true);
+                addMissionDialogCalled();
             }
         });
     }//GEN-LAST:event_addMissionActionPerformed
@@ -259,28 +256,55 @@ public class MainFrame extends javax.swing.JFrame {
 
             @Override
             public void run() {
-                AssignmentDialog dialog = new AssignmentDialog(MainFrame.this, true);
-                dialog.setVisible(true);
+                addAssignmentDialogCalled();
             }
         });
     }//GEN-LAST:event_addAssignmentActionPerformed
 
     private void tabSwitched(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabSwitched
-     
-        switch(((JTabbedPane) evt.getSource()).getSelectedIndex()) {
-            case 0:
-                showAgentsActions();
-                break;
-            case 1:
-                showMissionsActions();
-                break;
-            case 2:
-                showAssignmentsActions();
-                break;
-            default:
-                //
-        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                switch (((JTabbedPane) evt.getSource()).getSelectedIndex()) {
+                    case 0:
+                        showAgentsActions();
+                        break;
+                    case 1:
+                        showMissionsActions();
+                        break;
+                    case 2:
+                        showAssignmentsActions();
+                        break;
+                    default:
+                    //
+                }
+            }
+        });
     }//GEN-LAST:event_tabSwitched
+
+    private void addEntityButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEntityButtonActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                switch (MainFrame.this.entitiesPanel.getSelectedIndex()) {
+                    case 0:
+                        addAgentActionPerformed(evt);
+                        break;
+                    case 1:
+                        addMissionActionPerformed(evt);
+                        break;
+                    case 2:
+                        addAssignmentActionPerformed(evt);
+                        break;
+                    default:
+                    //
+                }
+            }
+        });
+
+    }//GEN-LAST:event_addEntityButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -298,15 +322,11 @@ public class MainFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+
         //</editor-fold>
 
         /* Create and display the form */
@@ -318,6 +338,7 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addAgentMenuItem;
     private javax.swing.JMenuItem addAssignmentMenuItem;
+    private javax.swing.JButton addEntityButton;
     private javax.swing.JMenuItem addMissionMenuItem;
     private javax.swing.JMenu agentsMenu;
     private javax.swing.JPanel agentsPanel;
@@ -357,4 +378,56 @@ public class MainFrame extends javax.swing.JFrame {
         filterCheckBox.setVisible(false);
         filterComboBox.setVisible(false);
     }
+
+    private void addAgentDialogCalled() {
+        AgentDialog ad = new AgentDialog(MainFrame.this, true);
+        ad.setVisible(true);
+
+        ad.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if (ad.getReturnStatus() == AgentDialog.RET_OK) {
+                    Agent agent = ad.getAgent();
+                    AgentsTableModel model = (AgentsTableModel) agentsTable.getModel();
+                    AddAgentSwingWorker sw = new AddAgentSwingWorker(model, agent);
+                    sw.execute();
+                }
+            }
+        });
+    }
+    
+    private void addMissionDialogCalled() {
+        MissionDialog md = new MissionDialog(MainFrame.this, true);
+        md.setVisible(true);
+
+        md.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if (md.getReturnStatus() == MissionDialog.RET_OK) {
+                    Mission mission = md.getMission();
+                    MissionsTableModel model = (MissionsTableModel) missionsTable.getModel();
+                    AddMissionSwingWorker sw = new AddMissionSwingWorker(model, mission);
+                    sw.execute();
+                }
+            }
+        });
+    }
+    
+    private void addAssignmentDialogCalled() {
+        AssignmentDialog asd = new AssignmentDialog(MainFrame.this, true);
+        asd.setVisible(true);
+
+        asd.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if (asd.getReturnStatus() == AssignmentDialog.RET_OK) {
+                    Assignment assignment = asd.getAssignment();
+                    AssignmentsTableModel model = (AssignmentsTableModel) assignmentsTable.getModel();
+                    AddAssignmentSwingWorker sw = new AddAssignmentSwingWorker(model, assignment);
+                    sw.execute();
+                }
+            }
+        });
+    }
+
 }

@@ -75,6 +75,7 @@
                       <EmptySpace min="22" pref="22" max="-2" attributes="0"/>
                       <Component id="filterComboBox" min="-2" pref="165" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="addEntityButton" min="-2" pref="97" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="102" max="32767" attributes="0"/>
           </Group>
@@ -95,6 +96,8 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="filterComboBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
+              <Component id="addEntityButton" min="-2" pref="39" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="editEntityButton" min="-2" pref="39" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="editEntityButton1" min="-2" pref="39" max="-2" attributes="0"/>
@@ -211,13 +214,8 @@
               <SubComponents>
                 <Component class="javax.swing.JTable" name="missionsTable">
                   <Properties>
-                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="4" rowCount="4">
-                        <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 4" type="java.lang.Object"/>
-                      </Table>
+                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="new MissionsTableModel()" type="code"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -256,13 +254,8 @@
               <SubComponents>
                 <Component class="javax.swing.JTable" name="assignmentsTable">
                   <Properties>
-                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="4" rowCount="4">
-                        <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 4" type="java.lang.Object"/>
-                      </Table>
+                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="new AssignmentsTableModel()" type="code"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -298,6 +291,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Default"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="addEntityButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Add"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addEntityButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

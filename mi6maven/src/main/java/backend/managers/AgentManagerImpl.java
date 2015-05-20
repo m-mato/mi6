@@ -34,23 +34,6 @@ public class AgentManagerImpl implements AgentManager {
 
     private DataSource dataSource;
 
-    public AgentManagerImpl() {
-    }
-
-    public AgentManagerImpl(String dbURL) {
-        BasicDataSource ds = new BasicDataSource();
-        ds.setUrl("jdbc:derby:memory:mi6testDB;create=true");
-
-        try {
-            DBUtils.executeSqlScript(ds, getClass().getResource("/createTables.sql"));
-            DBUtils.executeSqlScript(ds, getClass().getResource("/insertTestData.sql"));
-        } catch (SQLException ex) {
-            logger.log(Level.WARNING, "Can not create tables in test Database");
-        }
-
-        this.setDataSource(ds);
-    }
-
     private static final RowMapper<Agent> MAPPER = (rs, rowNum) -> {
         Agent agent = new Agent();
         agent.setId(rs.getLong("ID"));
@@ -61,9 +44,24 @@ public class AgentManagerImpl implements AgentManager {
         return agent;
     };
 
-    public final void setDataSource(DataSource dataSource) {
+    public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
         this.jdbc = new JdbcTemplate(dataSource);
+    }
+    
+    public void setDefaultDataSource() {
+        BasicDataSource ds = new BasicDataSource();
+        ds.setUrl("jdbc:derby:memory:mi6testDB;create=true");
+
+        try {
+            if (DBUtils.tryCreateTables(ds, getClass().getResource("/createTables.sql"))) {
+                DBUtils.executeSqlScript(ds, getClass().getResource("/insertTestData.sql"));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.WARNING, "Can not create tables in test Database");
+        }
+
+        this.setDataSource(ds);
     }
 
     private void checkDataSource() {
@@ -129,13 +127,6 @@ public class AgentManagerImpl implements AgentManager {
         List<Agent> agents = jdbc.query("SELECT ID, NICKNAME, AGE, PHONE_NUMBER FROM AGENTS", MAPPER);
 
         return agents;
-    }
-
-    @Override
-    public int getNumberOfAganets() {
-        checkDataSource();
-
-        return jdbc.getFetchSize();
     }
 
     private void validateAgent(Agent agent) throws IllegalArgumentException {

@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Tue May 19 13:21:27 CEST 2015:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-014d-6be8-2cae-000003153cb8 
-on database directory memory:/home/mato/Documents/Projects/Java/mi6/mi6maven/mi6testDB  with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Wed May 20 03:56:16 CEST 2015:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-014d-6f09-170d-0000030e3518 
+on database directory memory:/home/mato/Documents/Projects/Java/mi6/mi6maven/mi6testDB  with class loader sun.misc.Launcher$AppClassLoader@14dad5dc 
 Loaded from file:/home/mato/.m2/repository/org/apache/derby/derby/10.8.1.2/derby-10.8.1.2.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_45-b13

@@ -5,6 +5,7 @@
  */
 package frontend;
 
+import backend.entities.Mission;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
@@ -254,4 +255,14 @@ public class MissionDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private int returnStatus = RET_CANCEL;
+
+    Mission getMission() {
+        Mission mission = new Mission();
+        mission.setCodeName(codeNameTextField.getText());
+        mission.setLocation(locationTextField.getText());
+        mission.setObjective(objectiveTextArea.getText());
+        mission.setNotes(notesTextArea.getText());
+        
+        return mission;
+    }
 }
