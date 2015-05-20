@@ -12,19 +12,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.time.Instant;
 import java.util.Date;
-import java.util.List;
+import frontend.model.AgentComboBoxModel;
+import frontend.model.MissionComboBoxModel;
+import java.awt.PopupMenu;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
+import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
+import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
+import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 /**
  *
  * @author Andrej Halaj
  */
 public class AssignmentDialog extends javax.swing.JDialog {
-    
+
     /**
      * A return status code - returned if Cancel button has been pressed
      */
@@ -36,6 +41,7 @@ public class AssignmentDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form AssignmentDialog
+     *
      * @param parent
      * @param modal
      */
@@ -43,6 +49,11 @@ public class AssignmentDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
+        startDatePicker = getStartDatePicker();
+        startDatePicker.setVisible(true);        
+        this.add(startDatePicker);
+        this.pack();
+        
         // Close the dialog when Esc is pressed
         String cancelName = "cancel";
         InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -54,7 +65,7 @@ public class AssignmentDialog extends javax.swing.JDialog {
                 doClose(RET_CANCEL);
             }
         });
-        
+
     }
 
     /**
@@ -104,9 +115,10 @@ public class AssignmentDialog extends javax.swing.JDialog {
             }
         });
 
-        agentComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        agentComboBox.setModel(new AgentComboBoxModel());
+        agentComboBox.setToolTipText("");
 
-        missionComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        missionComboBox.setModel(new MissionComboBoxModel());
 
         agentLabel.setText("Agent:");
 
@@ -197,7 +209,7 @@ public class AssignmentDialog extends javax.swing.JDialog {
     private void closeDialog(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_closeDialog
         doClose(RET_CANCEL);
     }//GEN-LAST:event_closeDialog
-    
+
     private void doClose(int retStatus) {
         returnStatus = retStatus;
         setVisible(false);
@@ -246,6 +258,7 @@ public class AssignmentDialog extends javax.swing.JDialog {
             }
         });
     }
+    private JDatePickerImpl startDatePicker;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox agentComboBox;
@@ -263,23 +276,24 @@ public class AssignmentDialog extends javax.swing.JDialog {
     private int returnStatus = RET_CANCEL;
 
     public Assignment getAssignment() {
-        Agent agent = new Agent();
-        agent.setNickName("Default");
-        agent.setAge(1);
-        agent.setPhoneNumber("000");
-        
-        Mission mission = new Mission();
-        mission.setCodeName("Default");
-        mission.setObjective("Default Objective");
-        mission.setLocation("Default Locaion");
-        mission.setNotes("Default Notes");
-        
+        Agent agent = (Agent) agentComboBox.getSelectedItem();
+
+        Mission mission = (Mission) missionComboBox.getSelectedItem();
+
         Assignment assignment = new Assignment();
         assignment.setAgent(agent);
         assignment.setMission(mission);
         assignment.setStartDate(Date.from(Instant.EPOCH));
         assignment.setEndDate(null);
-        
+
         return assignment;
+    }
+
+    private JDatePickerImpl getStartDatePicker() {
+        UtilDateModel model = new UtilDateModel();
+        JDatePanelImpl datePanel = new JDatePanelImpl(model);
+        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel);
+        
+        return datePicker;
     }
 }

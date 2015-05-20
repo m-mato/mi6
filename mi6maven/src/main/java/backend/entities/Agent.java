@@ -65,6 +65,11 @@ public class Agent {
     }
 
     @Override
+    public String toString() {
+        return "Agent \"" + nickName + "\" [age= " + age +", phoneNumber= " + phoneNumber + "]";
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;

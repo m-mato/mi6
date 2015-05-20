@@ -13,14 +13,15 @@ import java.util.Objects;
  * @author Matej Majdis
  */
 public class Mission {
+
     private Long id;
     private String codeName;
     private String objective;
     private String location;
     private String notes;
-    
+
     public Mission() {
-        
+
     }
 
     public Long getId() {
@@ -83,7 +84,7 @@ public class Mission {
             return false;
         }
         final Mission other = (Mission) obj;
-        if (this.id != other.id) {
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         if (!Objects.equals(this.codeName, other.codeName)) {
@@ -95,11 +96,18 @@ public class Mission {
         if (!Objects.equals(this.location, other.location)) {
             return false;
         }
-        if (!Objects.equals(this.notes, other.notes)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.notes, other.notes);
     }
 
-    
+    @Override
+    public String toString() {
+        String ret = "Mission \"" + codeName + "\" [objective= " + objective + ", location= " + location;
+        if (notes != null) {
+            ret += ", notes= " + notes;
+        }
+        ret += "]";
+
+        return ret;
+    }
+
 }
