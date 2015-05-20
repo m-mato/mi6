@@ -37,7 +37,7 @@ public class MissionDialog extends javax.swing.JDialog {
         initComponents();
 
         // Close the dialog when Esc is pressed
-        String cancelName = "cancel";
+        String cancelName = java.util.ResourceBundle.getBundle("frontend/MissionDialog").getString("CANCEL");
         InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), cancelName);
         ActionMap actionMap = getRootPane().getActionMap();
@@ -78,7 +78,8 @@ public class MissionDialog extends javax.swing.JDialog {
         jScrollPane2 = new javax.swing.JScrollPane();
         notesTextArea = new javax.swing.JTextArea();
 
-        jLabel1.setText("jLabel1");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("frontend/MissionDialog"); // NOI18N
+        jLabel1.setText(bundle.getString("JLABEL1")); // NOI18N
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -86,27 +87,27 @@ public class MissionDialog extends javax.swing.JDialog {
             }
         });
 
-        okButton.setText("OK");
+        okButton.setText(bundle.getString("OK")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
 
-        cancelButton.setText("Cancel");
+        cancelButton.setText(bundle.getString("CANCEL")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        jLabel2.setText("CodeName:");
+        jLabel2.setText(bundle.getString("CODENAME:")); // NOI18N
 
-        jLabel3.setText("Objective:");
+        jLabel3.setText(bundle.getString("OBJECTIVE:")); // NOI18N
 
-        jLabel4.setText("Location:");
+        jLabel4.setText(bundle.getString("LOCATION:")); // NOI18N
 
-        jLabel5.setText("Notes:");
+        jLabel5.setText(bundle.getString("NOTES:")); // NOI18N
 
         objectiveTextArea.setColumns(20);
         objectiveTextArea.setRows(5);
@@ -207,7 +208,7 @@ public class MissionDialog extends javax.swing.JDialog {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if (java.util.ResourceBundle.getBundle("frontend/MissionDialog").getString("NIMBUS").equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }

@@ -10,3 +10,4 @@
 /mi6web-Majdis/target/
 mi6maven/derby.log
 mi6maven/derby.log
+*.log

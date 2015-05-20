@@ -14,15 +14,14 @@ import java.time.Instant;
 import java.util.Date;
 import frontend.model.AgentComboBoxModel;
 import frontend.model.MissionComboBoxModel;
-import java.awt.PopupMenu;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
-import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
-import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
-import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 /**
  *
@@ -49,13 +48,8 @@ public class AssignmentDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        startDatePicker = getStartDatePicker();
-        startDatePicker.setVisible(true);        
-        this.add(startDatePicker);
-        this.pack();
-        
         // Close the dialog when Esc is pressed
-        String cancelName = "cancel";
+        String cancelName = java.util.ResourceBundle.getBundle("frontend/AssignmentDialog").getString("CANCEL");
         InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), cancelName);
         ActionMap actionMap = getRootPane().getActionMap();
@@ -92,8 +86,15 @@ public class AssignmentDialog extends javax.swing.JDialog {
         missionLabel = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        startDateField = new javax.swing.JFormattedTextField();
-        endDateField = new javax.swing.JFormattedTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        startDay = new javax.swing.JSpinner();
+        startMonth = new javax.swing.JSpinner();
+        startYear = new javax.swing.JSpinner();
+        endDay = new javax.swing.JSpinner();
+        endMonth = new javax.swing.JSpinner();
+        endYear = new javax.swing.JSpinner();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -101,14 +102,15 @@ public class AssignmentDialog extends javax.swing.JDialog {
             }
         });
 
-        okButton.setText("OK");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("frontend/AssignmentDialog"); // NOI18N
+        okButton.setText(bundle.getString("OK")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
 
-        cancelButton.setText("Cancel");
+        cancelButton.setText(bundle.getString("CANCEL")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
@@ -116,21 +118,35 @@ public class AssignmentDialog extends javax.swing.JDialog {
         });
 
         agentComboBox.setModel(new AgentComboBoxModel());
-        agentComboBox.setToolTipText("");
+        agentComboBox.setToolTipText(bundle.getString("")); // NOI18N
 
         missionComboBox.setModel(new MissionComboBoxModel());
 
-        agentLabel.setText("Agent:");
+        agentLabel.setText(bundle.getString("AGENT:")); // NOI18N
 
-        missionLabel.setText("Mission:");
+        missionLabel.setText(bundle.getString("MISSION:")); // NOI18N
 
-        jLabel1.setText("Start Date:");
+        jLabel1.setText(bundle.getString("START DATE:")); // NOI18N
 
-        jLabel2.setText("End Date:");
+        jLabel2.setText(bundle.getString("END DATE:")); // NOI18N
 
-        startDateField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("d.M.yyyy"))));
+        jLabel3.setText(bundle.getString("DAY")); // NOI18N
 
-        endDateField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("d.M.yyyy"))));
+        jLabel4.setText(bundle.getString("MONTH")); // NOI18N
+
+        jLabel5.setText(bundle.getString("YEAR")); // NOI18N
+
+        startDay.setModel(new javax.swing.SpinnerNumberModel(1, 1, 31, 1));
+
+        startMonth.setModel(new javax.swing.SpinnerNumberModel(1, 1, 12, 1));
+
+        startYear.setModel(new javax.swing.SpinnerNumberModel(1900, 1900, 2015, 1));
+
+        endDay.setModel(new javax.swing.SpinnerNumberModel(0, 0, 31, 1));
+
+        endMonth.setModel(new javax.swing.SpinnerNumberModel(0, 0, 12, 1));
+
+        endYear.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(2015), Integer.valueOf(2015), null, Integer.valueOf(1)));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -139,27 +155,51 @@ public class AssignmentDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(agentLabel)
-                    .addComponent(missionLabel)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(cancelButton)
-                            .addContainerGap())
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(agentComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 484, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(38, 38, 38)))
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(agentLabel)
+                            .addComponent(missionLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(cancelButton))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(agentComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 484, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(38, 38, 38)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(missionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 484, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(38, 38, 38))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addGap(52, 52, 52)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(missionComboBox, 0, 484, Short.MAX_VALUE)
-                            .addComponent(startDateField)
-                            .addComponent(endDateField))
-                        .addGap(38, 38, 38))))
+                            .addComponent(startDay, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                            .addComponent(endDay))
+                        .addGap(34, 34, 34)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(endMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(endYear, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(startMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(startYear, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(206, 206, 206)))
+                .addGap(208, 208, 208))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(155, 155, 155)
+                .addComponent(jLabel3)
+                .addGap(59, 59, 59)
+                .addComponent(jLabel4)
+                .addGap(88, 88, 88)
+                .addComponent(jLabel5)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cancelButton, okButton});
@@ -175,15 +215,24 @@ public class AssignmentDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(missionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(missionLabel))
-                .addGap(34, 34, 34)
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(startDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22)
+                    .addComponent(startDay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(startMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(startYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(endDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+                    .addComponent(endDay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(endMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(endYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -196,7 +245,11 @@ public class AssignmentDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        doClose(RET_OK);
+        if (validateDates()) {
+            doClose(RET_OK);
+        } else {
+            JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("frontend/AssignmentDialog").getString("DATES ARE INVALID. PLEASE ENTER CORRECT DATES."));
+        }
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -227,7 +280,7 @@ public class AssignmentDialog extends javax.swing.JDialog {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if (java.util.ResourceBundle.getBundle("frontend/AssignmentDialog").getString("NIMBUS").equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -258,19 +311,25 @@ public class AssignmentDialog extends javax.swing.JDialog {
             }
         });
     }
-    private JDatePickerImpl startDatePicker;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox agentComboBox;
     private javax.swing.JLabel agentLabel;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JFormattedTextField endDateField;
+    private javax.swing.JSpinner endDay;
+    private javax.swing.JSpinner endMonth;
+    private javax.swing.JSpinner endYear;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JComboBox missionComboBox;
     private javax.swing.JLabel missionLabel;
     private javax.swing.JButton okButton;
-    private javax.swing.JFormattedTextField startDateField;
+    private javax.swing.JSpinner startDay;
+    private javax.swing.JSpinner startMonth;
+    private javax.swing.JSpinner startYear;
     // End of variables declaration//GEN-END:variables
 
     private int returnStatus = RET_CANCEL;
@@ -283,17 +342,39 @@ public class AssignmentDialog extends javax.swing.JDialog {
         Assignment assignment = new Assignment();
         assignment.setAgent(agent);
         assignment.setMission(mission);
-        assignment.setStartDate(Date.from(Instant.EPOCH));
-        assignment.setEndDate(null);
+        assignment.setStartDate(getStartDate());
+        assignment.setEndDate(getEndDate());
 
         return assignment;
     }
 
-    private JDatePickerImpl getStartDatePicker() {
-        UtilDateModel model = new UtilDateModel();
-        JDatePanelImpl datePanel = new JDatePanelImpl(model);
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel);
+    private Date getStartDate() {
+        Integer startYear = (Integer) this.startYear.getValue();
+        Integer startMonth = (Integer) this.startMonth.getValue();
+        Integer startDay = (Integer) this.startDay.getValue();
+        Calendar startCalendar = new GregorianCalendar(startYear, startMonth, startDay);
         
-        return datePicker;
+        if (!startCalendar.isLenient()) {
+            return new GregorianCalendar(1900, 1, 1).getTime();
+        }
+
+        return startCalendar.getTime();
+    }
+
+    private Date getEndDate() {
+        Integer endYear = (Integer) this.endYear.getValue();
+        Integer endMonth = (Integer) this.endMonth.getValue();
+        Integer endDay = (Integer) this.endDay.getValue();
+        Calendar endCalendar = new GregorianCalendar(endYear, endMonth, endDay);
+        
+        if (!endCalendar.isLenient()) {
+            return null;
+        }
+
+        return endCalendar.getTime();
+    }
+
+    private boolean validateDates() {
+        return !(getEndDate() != null && getStartDate().after(getEndDate()));
     }
 }

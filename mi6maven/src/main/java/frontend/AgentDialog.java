@@ -39,7 +39,7 @@ public class AgentDialog extends javax.swing.JDialog {
         initComponents();
 
         // Close the dialog when Esc is pressed
-        String cancelName = "cancel";
+        String cancelName = java.util.ResourceBundle.getBundle("frontend/AgentDialog").getString("CANCEL");
         InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), cancelName);
         ActionMap actionMap = getRootPane().getActionMap();
@@ -83,25 +83,26 @@ public class AgentDialog extends javax.swing.JDialog {
             }
         });
 
-        okButton.setText("OK");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("frontend/AgentDialog"); // NOI18N
+        okButton.setText(bundle.getString("OK")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
 
-        cancelButton.setText("Cancel");
+        cancelButton.setText(bundle.getString("CANCEL")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        phoneNumberLabel.setText("Phone Number:");
+        phoneNumberLabel.setText(bundle.getString("PHONE NUMBER:")); // NOI18N
 
-        nameLabel.setText("Nickname:");
+        nameLabel.setText(bundle.getString("NICKNAME:")); // NOI18N
 
-        ageLabel.setText("Age:");
+        ageLabel.setText(bundle.getString("AGE:")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -193,7 +194,7 @@ public class AgentDialog extends javax.swing.JDialog {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if (java.util.ResourceBundle.getBundle("frontend/AgentDialog").getString("NIMBUS").equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }

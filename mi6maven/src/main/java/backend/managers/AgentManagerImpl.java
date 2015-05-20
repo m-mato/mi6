@@ -7,13 +7,16 @@ package backend.managers;
 
 import backend.common.DBUtils;
 import backend.entities.Agent;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,8 +34,22 @@ public class AgentManagerImpl implements AgentManager {
 
     private static final Logger logger = Logger.getLogger(AssignmentManagerImpl.class.getName());
     private JdbcTemplate jdbc;
+    private FileHandler fh;
 
     private DataSource dataSource;
+
+    public AgentManagerImpl() {
+        try {
+            fh = new FileHandler("C:\\Users\\Andrej Halaj\\Documents\\NetBeansProjects\\mi6\\mi6maven\\log\\Log.log");
+            logger.addHandler(fh);
+            SimpleFormatter formatter = new SimpleFormatter();  
+            fh.setFormatter(formatter);
+        } catch (IOException ex) {
+            Logger.getLogger(AgentManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(AgentManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     private static final RowMapper<Agent> MAPPER = (rs, rowNum) -> {
         Agent agent = new Agent();
@@ -48,7 +65,7 @@ public class AgentManagerImpl implements AgentManager {
         this.dataSource = dataSource;
         this.jdbc = new JdbcTemplate(dataSource);
     }
-    
+
     public void setDefaultDataSource() {
         BasicDataSource ds = new BasicDataSource();
         ds.setUrl("jdbc:derby:memory:mi6testDB;create=true");

@@ -53,7 +53,45 @@ public class AssignmentsTableModel extends AbstractTableModel {
             case 3: 
                 return assignment.getEndDate();
             default:
-                throw new IllegalArgumentException("columnIndex");
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("frontend/model/AssignmentsTableModel").getString("COLUMNINDEX"));
+        }
+    }
+    
+     @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        Assignment assignment = assignments.get(rowIndex);
+        switch (columnIndex) {
+            /*case 0:
+             return agent.getId();*/
+            case 0:
+                assignment.setAgent((Agent) aValue);
+                break;
+            case 1:
+                assignment.setMission((Mission) aValue);
+                break;
+            case 2:
+                assignment.setStartDate((Date) aValue);
+                break;
+            case 3:
+                assignment.setEndDate((Date) aValue);
+                break;
+            default:
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("frontend/model/AssignmentsTableModel").getString("COLUMNINDEX"));
+        }
+
+        assignmentManager.updateAssignment(assignment);
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                return true;
+            default:
+                return false;
         }
     }
     
@@ -61,15 +99,15 @@ public class AssignmentsTableModel extends AbstractTableModel {
     public String getColumnName(int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return "Agent";
+                return java.util.ResourceBundle.getBundle("frontend/model/AssignmentsTableModel").getString("AGENT");
             case 1:
-                return "Mission";
+                return java.util.ResourceBundle.getBundle("frontend/model/AssignmentsTableModel").getString("MISSION");
             case 2:
-                return "Start Date";
+                return java.util.ResourceBundle.getBundle("frontend/model/AssignmentsTableModel").getString("START DATE");
             case 3:
-                return "End Date";
+                return java.util.ResourceBundle.getBundle("frontend/model/AssignmentsTableModel").getString("END DATE");
             default:
-                throw new IllegalArgumentException("columnIndex");
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("frontend/model/AssignmentsTableModel").getString("COLUMNINDEX"));
         }
     }
 
@@ -84,7 +122,7 @@ public class AssignmentsTableModel extends AbstractTableModel {
             case 3:
                 return Date.class;
             default:
-                throw new IllegalArgumentException("columnIndex");
+                throw new IllegalArgumentException(java.util.ResourceBundle.getBundle("frontend/model/AssignmentsTableModel").getString("COLUMNINDEX"));
         }
     }
 
@@ -94,5 +132,15 @@ public class AssignmentsTableModel extends AbstractTableModel {
         int lastRow = assignments.size() - 1;
         fireTableRowsInserted(lastRow, lastRow);
     }
-
+    
+    public void removeAssignment(Assignment assignment) {
+        int row = assignments.indexOf(assignment);
+        assignments.remove(assignment);
+        assignmentManager.deleteAssignment(assignment);
+        fireTableRowsDeleted(row, row);
+    }
+    
+    public Assignment getAssignment(int index) {
+        return assignments.get(index);
+    }
 }

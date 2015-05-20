@@ -10,6 +10,7 @@ import backend.common.IllegalEntityException;
 import backend.entities.Agent;
 import backend.entities.Assignment;
 import backend.entities.Mission;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,8 +19,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Instant;
 import java.util.List;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,7 +41,21 @@ public class AssignmentManagerImpl implements AssignmentManager {
     private static final Logger logger = Logger.getLogger(AssignmentManagerImpl.class.getName());
     private JdbcTemplate jdbc;
     private DataSource dataSource;
+    private FileHandler fh;
 
+    public AssignmentManagerImpl() {
+        try {
+            fh = new FileHandler("C:\\Users\\Andrej Halaj\\Documents\\NetBeansProjects\\mi6\\mi6maven\\log\\Log.log");
+            logger.addHandler(fh);
+            SimpleFormatter formatter = new SimpleFormatter();  
+            fh.setFormatter(formatter);
+        } catch (IOException ex) {
+            Logger.getLogger(AssignmentManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(AssignmentManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private final RowMapper<Assignment> MAPPER = (ResultSet rs, int i) -> {
         AgentManagerImpl agentManager = new AgentManagerImpl();
         agentManager.setDataSource(dataSource);
